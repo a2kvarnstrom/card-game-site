@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
+        <script src="game.js"></script>
+        <title>Addrest</title>
     </head>
     <body>
         <div class="container">
@@ -12,12 +15,12 @@
                             <a href="index.html">Home</a>
                         </div>
                     </div>
-                    <div class="nav-link-wrapper">
+                    <div class="nav-link-wrapper active-nav-link">
                         <div class="play">
                             <a href="play.html">Play</a>
                         </div>
                     </div>
-                    <div class="nav-link-wrapper active-nav-link">
+                    <div class="nav-link-wrapper">
                         <div class="rules">
                             <a href="rules.html">Rules</a>
                         </div>
@@ -38,7 +41,19 @@
                     </div>
                 </div>
             </div>
+            <div class="buttons">
+                <button class="button" type="button" onclick="generateCards()">Generate Cards</button>
+                <div class="plusminusplayers">
+                    <button class="minusbutton" type="button" onclick="decreasePlayerCount()">-</button>
+                    <button class="plusbutton" type="button" onclick="increasePlayerCount()">+</button>
+                    <p id="playercount">Player Count: 2</p>
+                </div>
+            </div>
+            <p id="player1" class="player1">empty - </p>
+            <p id="player2" class="player2">empty - </p>
+            <p id="player3" class="player3">empty - </p>
+            <p id="player4" class="player4">empty - </p>
+            <p id="table" class="table">table - </p>
         </div>
-        <p>idk fuckin play or something</p>
     </body>
 </html>

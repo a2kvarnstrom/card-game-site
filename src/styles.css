@@ -1,8 +1,11 @@
 /* Body Styles */
 
 body {
+    font-family: 'Courier New', Courier, monospace;
     background-color: black;
-    margin: 0px;
+    margin: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     text-decoration-color: white;
 }
 
@@ -60,6 +63,11 @@ p {
     color: white !important;
 }
 
+.home-link-wrapper a {
+    color: #00c649 !important;
+    text-decoration: none;
+}
+
 /* Rules Styles */
 
 /* Button Styles */
@@ -78,9 +86,53 @@ p {
     background-color: white;
     color: black;
     border: 2px solid #8a8a8a;
-  }
+    border-radius: 15px;
+}
 
-  .button:hover {
+.button:hover {
     background-color: #8a8a8a;
     color: white;
-  }
+}
+
+.plusbutton {
+    width: 75px;
+    height: 55px;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: #00c649;
+    font-size: 16px;
+    margin: 15px 2px;
+    margin-left: 10px;
+    padding: 16px 32px;
+    transition-duration: 0.4s;
+    color: white;
+    border: 2px solid white;
+}
+
+.plusbutton:hover {
+    background-color: white;
+    color: #00c649;
+}
+
+.minusbutton {
+    width: 75px;
+    height: 55px;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: #780000;
+    font-size: 16px;
+    margin: 15px 2px;
+    margin-left: 3px;
+    padding: 16px 32px;
+    transition-duration: 0.4s;
+    color: white;
+    border: 2px solid white;
+}
+
+.minusbutton:hover {
+    background-color: white;
+    color: #780000;
+}
+
+/* Button Section Styles */
+
