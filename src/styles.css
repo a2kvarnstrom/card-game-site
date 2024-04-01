@@ -17,6 +17,10 @@ p {
     color: white;
 }
 
+label {
+    color: white;
+}
+
 /* Nav Styles */
 
 .nav-wrapper {
@@ -66,6 +70,10 @@ p {
 .home-link-wrapper a {
     color: #00c649 !important;
     text-decoration: none;
+}
+
+.login-link-wrapper a {
+    
 }
 
 /* Rules Styles */

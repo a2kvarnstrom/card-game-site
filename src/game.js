@@ -171,3 +171,42 @@ function endRound() {
     document.getElementById("player4").innerHTML = "empty - ";
     document.getElementById("table").innerHTML = "table - ";
 }
+
+function loginRedirect() {
+    location.href = "login.html";
+}
+
+function loginRedirect2() {
+    let loginInfo = {"uname":document.getElementById("uname").value, "pass":document.getElementById("pass").value};
+    login(loginInfo);
+}
+
+function registerRedirect() {
+    let regInfo = {"uname":document.getElementById("uname").value, "pass":document.getElementById("pass").value};
+    register(regInfo);
+}
+
+function register(info) {
+    location.href = "fu.html";
+}
+
+function login(loginfo) {
+    let sendata = {"type":"salt", "value":loginfo.uname};
+    send(sendata);
+    sendata = {"type":"login", "value":loginfo};
+    send(sendata);
+}
+
+async function send(data) {
+    a = JSON.stringify(data);
+    let response = await fetch("http://192.168.0.5:1199", {
+        mode: "cors",
+        credentials: "same-origin", 
+        method: "POST",
+        body: a,
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
+    console.log(response.text());
+}

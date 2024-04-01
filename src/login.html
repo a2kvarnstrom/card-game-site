@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
         <script src="game.js"></script>
-        <title>Addrest</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <div class="container">
             <div class="nav-wrapper">
                 <div class="left-side">
-                    <div class="nav-link-wrapper active-nav-link">
+                    <div class="nav-link-wrapper">
                         <div class="home">
                             <a href="index.html">Home</a>
                         </div>
@@ -41,10 +40,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <h1>Card Game</h1>
-        <div class="login-button-wrapper">
-            <button class="login button" id="button" type="button" onclick="loginRedirect()">Login</a>
+            <div class="login-wrapper">
+                <label for="uname">Username:</label>
+                <input type="text" id="uname" name="uname"><br><br>
+                <label for="pass">Password:</label>
+                <input type="password" id="pass" name="pass"><br><br>
+                <button class="button" type="button" onclick="loginRedirect2()">Login</button>
+                <button class="button" type="button" onclick="registerRedirect()">Register</button>
+            </div>
         </div>
     </body>
 </html>
