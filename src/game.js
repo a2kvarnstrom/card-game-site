@@ -199,7 +199,7 @@ function login(loginfo) {
 
 async function send(data) {
     a = JSON.stringify(data);
-    let response = await fetch("http://192.168.0.5:1199", {
+    let response = await fetch("http://uxhebxje.ddns.net/", {
         mode: "cors",
         credentials: "same-origin", 
         method: "POST",
