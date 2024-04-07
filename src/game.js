@@ -141,24 +141,24 @@ function deal(card) {
     if(cardsDealt <= doublePCount) {
         switch(y % doublePCount) {
             case 0:
-                receiveCard("player1", name);
+                giveCard("player1", name);
                 break;
             case 1:
-                receiveCard("player2", name);
+                giveCard("player2", name);
                 break;
             case 2:
-                receiveCard("player3", name);
+                giveCard("player3", name);
                 break;
             case 3:
-                receiveCard("player4", name);
+                giveCard("player4", name);
                 break;
         }
     } else {
-        receiveCard("table", name);
+        giveCard("table", name);
     }
 }
 
-function receiveCard(player, card) {
+function giveCard(player, card) {
     document.getElementById(`${player}`).innerHTML += card + " | ";
 }
 
@@ -172,6 +172,108 @@ function endRound() {
     document.getElementById("table").innerHTML = "table - ";
 }
 
+function newCard(suit, value, x, y) {
+	function drawHeart(x, y) {
+		ctx.beginPath();
+		ctx.arc(x-10, y, 10, 0, Math.PI, true);
+		ctx.lineTo(x-20, y);
+		ctx.fillStyle = "Tomato";
+		ctx.fill();
+		ctx.strokeStyle = "Tomato";
+		ctx.arc(x+10, y, 10, 0, Math.PI, true);
+		ctx.lineTo(x+20, y);
+		ctx.fill();
+		ctx.moveTo(x+20, y);
+		ctx.lineTo(x, y+30);
+		ctx.lineTo(x-20, y);
+		ctx.fill();
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.roundRect(x-40, y-43, 80, 100, 5);
+		ctx.strokeStyle ="Black";
+		ctx.stroke();
+	}
+	function drawSpade(x, y) {
+		ctx.beginPath();
+		ctx.arc(x-10, y+10, 10, 0, Math.PI);
+		ctx.lineTo(x-20, y+10);
+		ctx.fillStyle = "Black";
+		ctx.fill();
+		ctx.strokeStyle = "Black";
+		ctx.arc(x+10, y+10, 10, 0, Math.PI);
+		ctx.lineTo(x-20, y+10);
+		ctx.fill();
+		ctx.moveTo(x-20, y+10);
+		ctx.lineTo(x, y-20);
+		ctx.lineTo(x+20, y+10);
+		ctx.fill();
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.roundRect(x-40, y-43, 80, 100, 5);
+		ctx.strokeStyle ="Black";
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
+		ctx.lineTo(x+20, y+30);
+		ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
+		ctx.fill();
+		ctx.stroke();
+	}
+	
+	switch (suit) {
+		case "Hearts": {
+            drawHeart(x, y)
+			ctx.font = "28px Arial";
+			ctx.fillStyle = "Tomato";
+			switch (value) {
+				case 11: 
+					ctx.fillText("J", x-34, y-20);
+                    break;
+				
+				case 12: 
+					ctx.fillText("Q", x-34, y-20);
+                    break;
+				
+				case 13: 
+					ctx.fillText("K", x-34, y-20);
+                    break;
+				
+				default:
+                    ctx.fillText(value, x-34, y-20);
+                    break;
+			}
+		}
+		case "Spades": {
+            drawSpade(x, y)
+					ctx.font = "28px Arial";
+					ctx.fillStyle = "Black";
+			switch (value) {
+				case 11: 
+					ctx.fillText("J", x-34, y-20);
+                    break;
+				
+				case 12: 
+					ctx.fillText("Q", x-34, y-20);
+                    break;
+				
+				case 13: 
+					ctx.fillText("K", x-34, y-20);
+                    break;
+				
+                default: 
+                    ctx.fillText(value, x-34, y-20);
+                    break;
+			}
+		}
+		case "Diamonds": {
+			
+		}
+		case "Clubs": {
+			
+		}
+	}
+}
+
 function loginRedirect() {
     location.href = "login.html";
 }
@@ -182,6 +284,7 @@ function loginRedirect2() {
 }
 
 function registerRedirect() {
+    cpass = "asdasd";
     let regInfo = {"uname":document.getElementById("uname").value, "pass":document.getElementById("pass").value};
     register(regInfo);
 }
@@ -192,7 +295,7 @@ function register(info) {
 
 function login(loginfo) {
     let sendata = {"type":"salt", "value":loginfo.uname};
-    send(sendata);
+    var salt = send(sendata);
     sendata = {"type":"login", "value":loginfo};
     send(sendata);
 }
@@ -200,7 +303,6 @@ function login(loginfo) {
 async function send(data) {
     a = JSON.stringify(data);
     let response = await fetch("http://uxhebxje.ddns.net/", {
-        mode: "cors",
         credentials: "same-origin", 
         method: "POST",
         body: a,
