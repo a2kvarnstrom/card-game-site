@@ -253,6 +253,7 @@ function newCard(suit, value, x, y) {
                     break;
             }
         }
+        break;
         case "Spades": {
             drawSpade(x, y)
             ctx.font = "28px Arial";
@@ -275,12 +276,15 @@ function newCard(suit, value, x, y) {
                     break;
             }
         }
+        break;
         case "Diamonds": {
 
         }
+        break;
         case "Clubs": {
 
         }
+        break;
     }
 }
 
