@@ -140,3 +140,7 @@ label {
 
 /* Button Section Styles */
 
+canvas {
+    border: 2px solid white;
+    background-color: black;
+}
