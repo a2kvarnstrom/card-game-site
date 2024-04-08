@@ -146,6 +146,8 @@ function generateCards() {
 
 function deal(card) {
     cardsDealt++;
+    // see which players turn it is to get a card
+    // this is for a variable amount of players
     y = cardsDealt % playerCount;
     // check if joker
     if (card.value != "Joker") {
@@ -155,6 +157,7 @@ function deal(card) {
     }
     // if it hasn't dealt 2 cards per player
     if (cardsDealt <= doublePCount) {
+        // see which player gets the card
         switch (y % doublePCount) {
             case 0:
                 giveCard("player1", name, card.value, card.suit);
