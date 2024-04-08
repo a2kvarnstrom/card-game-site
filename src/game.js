@@ -2,6 +2,7 @@ let state = 0;
 let playerCount = 2;
 let doublePCount = playerCount * 2;
 let n = 52 + doublePCount;
+n = 52;
 let aCards = [n];
 let cardsDealt = 0;
 let cardAmount = doublePCount;
@@ -12,8 +13,16 @@ let p3username = undefined;
 let p4username = undefined;
 let c;
 let ctx;
-c = document.getElementById("myCanvas");
-ctx = c.getContext("2d");
+let cardX;
+let cardY;
+let hands;
+
+function getCanvas() {
+    c = document.getElementById("myCanvas");
+    ctx = c.getContext("2d");
+    cardX = 60;
+    cardY = 60;
+}
 
 for (i = n; i >= 1; i--) {
     aCards[i] = i;
@@ -38,6 +47,7 @@ function decreasePlayerCount() {
 
 function refillCards() {
     n = 52 + doublePCount;
+    n = 52;
     aCards = [n];
     for (i = n; i >= 1; i--) {
         aCards[i] = i;
@@ -166,8 +176,8 @@ function deal(card) {
 
 function giveCard(player, card, value, suit) {
     document.getElementById(`${player}`).innerHTML += card + " | ";
-    console.log(value);
-    newCard(suit, value, 100, 100);
+    new newCard("Spades", value, cardX, cardY);
+    cardX += 100;
 }
 
 function endRound() {
@@ -179,6 +189,9 @@ function endRound() {
     document.getElementById("player3").innerHTML = "empty - ";
     document.getElementById("player4").innerHTML = "empty - ";
     document.getElementById("table").innerHTML = "table - ";
+    ctx.clearRect(0, 0, c.width, c.height);
+    cardX = 60;
+    cardY = 60;
 }
 
 function newCard(suit, value, x, y) {
@@ -235,46 +248,12 @@ function newCard(suit, value, x, y) {
             drawHeart(x, y)
             ctx.font = "28px Arial";
             ctx.fillStyle = "Tomato";
-            switch (value) {
-                case 11:
-                    ctx.fillText("J", x - 34, y - 20);
-                    break;
-
-                case 12:
-                    ctx.fillText("Q", x - 34, y - 20);
-                    break;
-
-                case 13:
-                    ctx.fillText("K", x - 34, y - 20);
-                    break;
-
-                default:
-                    ctx.fillText(value, x - 34, y - 20);
-                    break;
-            }
         }
         break;
         case "Spades": {
             drawSpade(x, y)
             ctx.font = "28px Arial";
             ctx.fillStyle = "Black";
-            switch (value) {
-                case 11:
-                    ctx.fillText("J", x - 34, y - 20);
-                    break;
-
-                case 12:
-                    ctx.fillText("Q", x - 34, y - 20);
-                    break;
-
-                case 13:
-                    ctx.fillText("K", x - 34, y - 20);
-                    break;
-
-                default:
-                    ctx.fillText(value, x - 34, y - 20);
-                    break;
-            }
         }
         break;
         case "Diamonds": {
@@ -285,6 +264,27 @@ function newCard(suit, value, x, y) {
 
         }
         break;
+    }
+    switch (value) {
+        case "Ace":
+            ctx.fillText("A", x - 34, y - 20);
+            break;
+
+        case "Jack":
+            ctx.fillText("J", x - 34, y - 20);
+            break;
+
+        case "Queen":
+            ctx.fillText("Q", x - 34, y - 20);
+            break;
+
+        case "King":
+            ctx.fillText("K", x - 34, y - 20);
+            break;
+
+        default:
+            ctx.fillText(value, x - 34, y - 20);
+            break;
     }
 }
 

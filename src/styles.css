@@ -1,7 +1,7 @@
 /* Body Styles */
 
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: monospace;
     background-color: black;
     margin: 5px;
     margin-top: 0px;
@@ -141,6 +141,7 @@ label {
 /* Button Section Styles */
 
 canvas {
-    border: 2px solid white;
-    background-color: black;
+    border: 3px solid #909090;
+    border-radius: 15px;
+    background-color: white;
 }
