@@ -77,22 +77,22 @@ function convertCard(card) {
     if (value != "Joker") {
         switch (value) {
             case 1:
-                value = "Ace";
+                value = "A";
                 break;
             case 11:
-                value = "Jack";
+                value = "J";
                 break;
             case 12:
-                value = "Queen";
+                value = "Q";
                 break;
             case 13:
-                value = "King";
+                value = "K";
                 break;
             case 14:
-                value = "Ace";
+                value = "A";
                 break;
             case 15:
-                value = "Ace";
+                value = "A";
             default:
                 break;
         }
@@ -179,7 +179,7 @@ function deal(card) {
 
 function giveCard(player, card, value, suit) {
     document.getElementById(`${player}`).innerHTML += card + " | ";
-    new newCard("Spades", value, cardX, cardY);
+    newCard(suit, value, cardX, cardY);
     cardX += 100;
 }
 
@@ -245,6 +245,29 @@ function newCard(suit, value, x, y) {
         ctx.fill();
         ctx.stroke();
     }
+    function drawClub(x, y) {
+        ctx.beginPath();
+        ctx.arc(x-10, y+10, 10, 0, 1.6*Math.PI);
+        ctx.fillStyle = "Black";
+        ctx.strokeStyle = "Black";
+        ctx.arc(x+10, y+10, 10, 1.5*Math.PI, Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x, y-4, 10, 0, 2*Math.PI);
+        ctx.fill()
+        ctx.stroke()
+        ctx.beginPath();
+        ctx.roundRect(x-40, y-43, 80, 100, 5);
+        ctx.strokeStyle ="Black";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
+        ctx.lineTo(x+20, y+30);
+        ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
+        ctx.fill();
+        ctx.stroke();
+    }
 
     switch (suit) {
         case "Hearts": {
@@ -264,31 +287,13 @@ function newCard(suit, value, x, y) {
         }
         break;
         case "Clubs": {
-
+            drawClub(x, y)
+            ctx.font = "28px Arial";
+            ctx.fillStyle = "Black";
         }
         break;
     }
-    switch (value) {
-        case "Ace":
-            ctx.fillText("A", x - 34, y - 20);
-            break;
-
-        case "Jack":
-            ctx.fillText("J", x - 34, y - 20);
-            break;
-
-        case "Queen":
-            ctx.fillText("Q", x - 34, y - 20);
-            break;
-
-        case "King":
-            ctx.fillText("K", x - 34, y - 20);
-            break;
-
-        default:
-            ctx.fillText(value, x - 34, y - 20);
-            break;
-    }
+    ctx.fillText(value, x - 34, y - 20);
 }
 
 function loginRedirect() {
