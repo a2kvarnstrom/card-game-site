@@ -248,8 +248,8 @@ function newCard(suit, value, x, y) {
     function drawClub(x, y) {
         ctx.beginPath();
         ctx.arc(x-10, y+10, 10, 0, 1.6*Math.PI);
-        ctx.fillStyle = "Black";
-        ctx.strokeStyle = "Black";
+        ctx.fillStyle = "Green";
+        ctx.strokeStyle = "Green";
         ctx.arc(x+10, y+10, 10, 1.5*Math.PI, Math.PI);
         ctx.fill();
         ctx.stroke();
@@ -265,31 +265,51 @@ function newCard(suit, value, x, y) {
         ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
         ctx.lineTo(x+20, y+30);
         ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
+        ctx.fillStyle = "Green";
         ctx.fill();
+        ctx.strokeStyle = "Green";
+        ctx.stroke();
+    }
+    function drawDiamond(x, y) {
+    	ctx.beginPath();
+     	ctx.roundRect(x-40, y-43, 80, 100, 5);
+        ctx.strokeStyle ="Black";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y-10);
+        ctx.quadraticCurveTo(x+4, y+6, x+15, y+10);
+        ctx.quadraticCurveTo(x+4, y+14, x, y+30);
+        ctx.quadraticCurveTo(x-4, y+14, x-15, y+10);
+        ctx.quadraticCurveTo(x-4, y+6, x, y-10);
+        ctx.fillStyle = "Blue";
+        ctx.fill();
+        ctx.strokeStyle = "Blue";
         ctx.stroke();
     }
 
     switch (suit) {
         case "Hearts": {
-            drawHeart(x, y)
+            drawHeart(x, y);
             ctx.font = "28px Arial";
             ctx.fillStyle = "Tomato";
         }
         break;
         case "Spades": {
-            drawSpade(x, y)
+            drawSpade(x, y);
             ctx.font = "28px Arial";
             ctx.fillStyle = "Black";
         }
         break;
         case "Diamonds": {
-
+            drawDiamond(x, y);
+            ctx.font = "28px Arial";
+            ctx.fillStyle = "Blue";      
         }
         break;
         case "Clubs": {
-            drawClub(x, y)
+            drawClub(x, y);
             ctx.font = "28px Arial";
-            ctx.fillStyle = "Black";
+            ctx.fillStyle = "Green";
         }
         break;
     }
