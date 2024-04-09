@@ -3,7 +3,7 @@ let playerCount = 2;
 let doublePCount = playerCount * 2;
 let n = 52 + doublePCount;
 n = 52;
-let aCards = [n];
+let aCards;
 let cardsDealt = 0;
 let cardAmount = doublePCount;
 let j = cardAmount;
@@ -16,18 +16,46 @@ let ctx;
 let cardX;
 let cardY;
 let hands;
+let playerToDeal;
 
-function getCanvas() {
-    c = document.getElementById("myCanvas");
-    ctx = c.getContext("2d");
-    cardX = 60;
-    cardY = 60;
+function refillCards() {
+    // creates an array of n objects 1-n (n being the amount of cards)
+    n = 52 + doublePCount;
+    n = 52;
+    aCards = [n];
+    for (i = n; i >= 1; i--) {
+        aCards[i] = i;
+    }
+    aCards.shift();
 }
 
-for (i = n; i >= 1; i--) {
-    aCards[i] = i;
+function startGame() {
+    myGameArea.start();
+    endRound();
+    refillCards();
+    generateCards();
 }
-aCards.shift();
+
+function updateGameArea() {
+    null;
+}
+
+let myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.setAttribute("id", "myCanvas");
+        this.canvas.width = 1500;
+        this.canvas.height = 720;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[2]);
+        // this.interval = setInterval(updateGameArea, 20);
+        c = this.canvas;
+        ctx = c.getContext("2d");
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
 
 function increasePlayerCount() {
     if (playerCount <= 3) {
@@ -45,15 +73,7 @@ function decreasePlayerCount() {
     document.getElementById("playercount").innerHTML = "Player Count: " + playerCount;
 }
 
-function refillCards() {
-    n = 52 + doublePCount;
-    n = 52;
-    aCards = [n];
-    for (i = n; i >= 1; i--) {
-        aCards[i] = i;
-    }
-    aCards.shift();
-}
+
 
 function pickCard() {
     let i;
@@ -122,15 +142,18 @@ function generateCards() {
     if (aCards.length <= doublePCount + 3) {
         refillCards();
     }
+
+    // sets the amount of cards to deal depending on the turn
     if (cardsDealt == 0) {
         j = doublePCount;
     } else if (cardsDealt == doublePCount) {
         j = 3;
     } else if (cardsDealt == doublePCount + 3) {
         j = 1;
-    } else if (cardsDealt == doublePCount + 4) {
+    } else if (cardsDealt == doublePCount + 5) {
         endRound();
     }
+
     while (true) {
         if (j == 0) {
             break;
@@ -139,26 +162,35 @@ function generateCards() {
         deal(cadr);
         j--;
     }
-    if (cardsDealt == doublePCount + 4) {
+    if (cardsDealt == doublePCount + 5) {
         j = doublePCount;
     }
 }
 
 function deal(card) {
     cardsDealt++;
+    
     // see which players turn it is to get a card
     // this is for a variable amount of players
     y = cardsDealt % playerCount;
+    
     // check if joker
     if (card.value != "Joker") {
         var name = card.value + " of " + card.suit;
     } else {
         var name = "Joker";
     }
+
+    // fixes which player to deal to
+    playerToDeal = y % doublePCount;
+    playerToDeal--;
+    if(playerToDeal == -1) {
+        playerToDeal = playerCount - 1;
+    }
+
     // if it hasn't dealt 2 cards per player
     if (cardsDealt <= doublePCount) {
-        // see which player gets the card
-        switch (y % doublePCount) {
+        switch (playerToDeal) {
             case 0:
                 giveCard("player1", name, card.value, card.suit);
                 break;
@@ -179,7 +211,7 @@ function deal(card) {
 
 function giveCard(player, card, value, suit) {
     document.getElementById(`${player}`).innerHTML += card + " | ";
-    newCard(suit, value, cardX, cardY);
+    drawCard(suit, value, cardX, cardY);
     cardX += 100;
 }
 
@@ -197,7 +229,7 @@ function endRound() {
     cardY = 60;
 }
 
-function newCard(suit, value, x, y) {
+function drawCard(suit, value, x, y) {
     // ion fuckin know
     function drawHeart(x, y) {
         ctx.beginPath();
@@ -344,7 +376,7 @@ function login(loginfo) {
 
 async function send(data) {
     a = JSON.stringify(data);
-    let response = await fetch("http://uxhebxje.ddns.net/", {
+    let response = await fetch("https://uxhebxje.ddns.net/", {
         credentials: "same-origin",
         method: "POST",
         body: a,
