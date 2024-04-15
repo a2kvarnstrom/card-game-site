@@ -33,7 +33,6 @@ function startGame() {
     myGameArea.start();
     endRound();
     refillCards();
-    generateCards();
 }
 
 function updateGameArea() {
@@ -116,22 +115,22 @@ function convertCard(card) {
             default:
                 break;
         }
-    }
-    suit = card % 4;
-    suit++;
-    switch (suit) {
-        case 1:
-            suit = "Hearts";
-            break;
-        case 2:
-            suit = "Diamonds";
-            break;
-        case 3:
-            suit = "Clubs";
-            break;
-        case 4:
-            suit = "Spades";
-            break;
+        suit = card % 4;
+        suit++;
+        switch (suit) {
+            case 1:
+                suit = "Hearts";
+                break;
+            case 2:
+                suit = "Diamonds";
+                break;
+            case 3:
+                suit = "Clubs";
+                break;
+            case 4:
+                suit = "Spades";
+                break;
+        }
     }
     let cardID = { "suit": suit, "value": value };
     return cardID
@@ -150,7 +149,7 @@ function generateCards() {
         j = 3;
     } else if (cardsDealt == doublePCount + 3) {
         j = 1;
-    } else if (cardsDealt == doublePCount + 5) {
+    } else if (cardsDealt == doublePCount + 4) {
         endRound();
     }
 
@@ -162,7 +161,7 @@ function generateCards() {
         deal(cadr);
         j--;
     }
-    if (cardsDealt == doublePCount + 5) {
+    if (cardsDealt == doublePCount + 4) {
         j = doublePCount;
     }
 }
