@@ -32,7 +32,7 @@ let c;
 let ctx;
 let cardX;
 let cardY;
-let hands;
+let hands = [];
 let cardID;
 let playerToDeal;
 let salt;
@@ -280,8 +280,7 @@ function convertCard(card) {
                 break;
         }
     }
-    cardID = new Card(suit, value);
-    hands = [];
+    cardID = new Card(suit, value)
     hands.push(cardID);
     return cardID
 }
@@ -375,6 +374,7 @@ function endRound() {
     document.getElementById("player4").innerHTML = "empty - ";
     document.getElementById("table").innerHTML = "table - ";
     ctx.clearRect(0, 0, c.width, c.height);
+    hands = [];
     cardX = 60;
     cardY = 60;
 }
