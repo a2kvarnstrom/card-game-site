@@ -1,3 +1,20 @@
+let myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.setAttribute("id", "myCanvas");
+        this.canvas.width = 1500;
+        this.canvas.height = 720;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[2]);
+        // this.interval = setInterval(updateGameArea, 20);
+        c = this.canvas;
+        ctx = c.getContext("2d");
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
 let state = 0;
 let playerCount = 2;
 let doublePCount = playerCount * 2;
@@ -16,7 +33,157 @@ let ctx;
 let cardX;
 let cardY;
 let hands;
+let cardID;
 let playerToDeal;
+let salt;
+
+let buttons = {
+	call : document.createElement("button"),
+    fold : document.createElement("button"),
+    check : document.createElement("button"),
+    raise : document.createElement("button"),
+    initialize : function() {
+        this.call.setAttribute("id", "call"),
+        this.fold.setAttribute("id", "fold"),
+        this.check.setAttribute("id", "check"),
+        this.raise.setAttribute("id", "raise"),
+        this.call.setAttribute("class", "button call"),
+        this.fold.setAttribute("class", "button fold"),
+        this.check.setAttribute("class", "button check"),
+        this.raise.setAttribute("class", "button raise"),
+    	this.fold.innerHTML = "fold",
+        this.call.innerHTML = "call",
+        this.raise.innerHTML = "raise",
+        this.check.innerHTML = "check"
+    }
+}
+
+buttons.initialize();
+
+class Card {
+	constructor(suit, value) {
+    	this.suit = suit;
+        this.value = value;
+    }
+    draw(suit, value, x, y) {
+      // ion fuckin know
+      function drawHeart(x, y) {
+          ctx.beginPath();
+          ctx.arc(x - 10, y, 10, 0, Math.PI, true);
+          ctx.lineTo(x - 20, y);
+          ctx.fillStyle = "Tomato";
+          ctx.fill();
+          ctx.strokeStyle = "Tomato";
+          ctx.arc(x + 10, y, 10, 0, Math.PI, true);
+          ctx.lineTo(x + 20, y);
+          ctx.fill();
+          ctx.moveTo(x + 20, y);
+          ctx.lineTo(x, y + 30);
+          ctx.lineTo(x - 20, y);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.roundRect(x - 40, y - 43, 80, 100, 5);
+          ctx.strokeStyle = "Black";
+          ctx.stroke();
+      }
+      function drawSpade(x, y) {
+          ctx.beginPath();
+          ctx.arc(x - 10, y + 10, 10, 0, Math.PI);
+          ctx.lineTo(x - 20, y + 10);
+          ctx.fillStyle = "Black";
+          ctx.fill();
+          ctx.strokeStyle = "Black";
+          ctx.arc(x + 10, y + 10, 10, 0, Math.PI);
+          ctx.lineTo(x - 20, y + 10);
+          ctx.fill();
+          ctx.moveTo(x - 20, y + 10);
+          ctx.lineTo(x, y - 20);
+          ctx.lineTo(x + 20, y + 10);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.roundRect(x - 40, y - 43, 80, 100, 5);
+          ctx.strokeStyle = "Black";
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x - 20, y + 10, 20, 0, 0.5 * Math.PI);
+          ctx.lineTo(x + 20, y + 30);
+          ctx.arc(x + 20, y + 10, 20, 0.5 * Math.PI, Math.PI);
+          ctx.fill();
+          ctx.stroke();
+      }
+      function drawClub(x, y) {
+          ctx.beginPath();
+          ctx.arc(x-10, y+10, 10, 0, 1.6*Math.PI);
+          ctx.fillStyle = "Green";
+          ctx.strokeStyle = "Green";
+          ctx.arc(x+10, y+10, 10, 1.5*Math.PI, Math.PI);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x, y-4, 10, 0, 2*Math.PI);
+          ctx.fill()
+          ctx.stroke()
+          ctx.beginPath();
+          ctx.roundRect(x-40, y-43, 80, 100, 5);
+          ctx.strokeStyle ="Black";
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
+          ctx.lineTo(x+20, y+30);
+          ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
+          ctx.fillStyle = "Green";
+          ctx.fill();
+          ctx.strokeStyle = "Green";
+          ctx.stroke();
+      }
+      function drawDiamond(x, y) {
+          ctx.beginPath();
+          ctx.roundRect(x-40, y-43, 80, 100, 5);
+          ctx.strokeStyle ="Black";
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x, y-10);
+          ctx.quadraticCurveTo(x+4, y+6, x+15, y+10);
+          ctx.quadraticCurveTo(x+4, y+14, x, y+30);
+          ctx.quadraticCurveTo(x-4, y+14, x-15, y+10);
+          ctx.quadraticCurveTo(x-4, y+6, x, y-10);
+          ctx.fillStyle = "Blue";
+          ctx.fill();
+          ctx.strokeStyle = "Blue";
+          ctx.stroke();
+      }
+
+      switch (suit) {
+          case "Hearts": {
+              drawHeart(x, y);
+              ctx.font = "28px Arial";
+              ctx.fillStyle = "Tomato";
+          }
+          break;
+          case "Spades": {
+              drawSpade(x, y);
+              ctx.font = "28px Arial";
+              ctx.fillStyle = "Black";
+          }
+          break;
+          case "Diamonds": {
+              drawDiamond(x, y);
+              ctx.font = "28px Arial";
+              ctx.fillStyle = "Blue";      
+          }
+          break;
+          case "Clubs": {
+              drawClub(x, y);
+              ctx.font = "28px Arial";
+              ctx.fillStyle = "Green";
+          }
+          break;
+      }
+      ctx.fillText(value, x - 34, y - 20);
+  }
+}
 
 function refillCards() {
     // creates an array of n objects 1-n (n being the amount of cards)
@@ -36,24 +203,7 @@ function startGame() {
 }
 
 function updateGameArea() {
-    null;
-}
-
-let myGameArea = {
-    canvas : document.createElement("canvas"),
-    start : function() {
-        this.canvas.setAttribute("id", "myCanvas");
-        this.canvas.width = 1500;
-        this.canvas.height = 720;
-        this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[2]);
-        // this.interval = setInterval(updateGameArea, 20);
-        c = this.canvas;
-        ctx = c.getContext("2d");
-    },
-    clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+    return;
 }
 
 function increasePlayerCount() {
@@ -71,8 +221,6 @@ function decreasePlayerCount() {
     doublePCount = playerCount * 2;
     document.getElementById("playercount").innerHTML = "Player Count: " + playerCount;
 }
-
-
 
 function pickCard() {
     let i;
@@ -132,7 +280,9 @@ function convertCard(card) {
                 break;
         }
     }
-    let cardID = { "suit": suit, "value": value };
+    cardID = new Card(suit, value);
+    hands = [];
+    hands.push(cardID);
     return cardID
 }
 
@@ -182,6 +332,7 @@ function deal(card) {
 
     // fixes which player to deal to
     playerToDeal = y % doublePCount;
+    // makes sure it doesnt deal to the first player last
     playerToDeal--;
     if(playerToDeal == -1) {
         playerToDeal = playerCount - 1;
@@ -210,7 +361,7 @@ function deal(card) {
 
 function giveCard(player, card, value, suit) {
     document.getElementById(`${player}`).innerHTML += card + " | ";
-    drawCard(suit, value, cardX, cardY);
+    cardID.draw(suit, value, cardX, cardY);
     cardX += 100;
 }
 
@@ -226,125 +377,6 @@ function endRound() {
     ctx.clearRect(0, 0, c.width, c.height);
     cardX = 60;
     cardY = 60;
-}
-
-function drawCard(suit, value, x, y) {
-    // ion fuckin know
-    function drawHeart(x, y) {
-        ctx.beginPath();
-        ctx.arc(x - 10, y, 10, 0, Math.PI, true);
-        ctx.lineTo(x - 20, y);
-        ctx.fillStyle = "Tomato";
-        ctx.fill();
-        ctx.strokeStyle = "Tomato";
-        ctx.arc(x + 10, y, 10, 0, Math.PI, true);
-        ctx.lineTo(x + 20, y);
-        ctx.fill();
-        ctx.moveTo(x + 20, y);
-        ctx.lineTo(x, y + 30);
-        ctx.lineTo(x - 20, y);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.roundRect(x - 40, y - 43, 80, 100, 5);
-        ctx.strokeStyle = "Black";
-        ctx.stroke();
-    }
-    function drawSpade(x, y) {
-        ctx.beginPath();
-        ctx.arc(x - 10, y + 10, 10, 0, Math.PI);
-        ctx.lineTo(x - 20, y + 10);
-        ctx.fillStyle = "Black";
-        ctx.fill();
-        ctx.strokeStyle = "Black";
-        ctx.arc(x + 10, y + 10, 10, 0, Math.PI);
-        ctx.lineTo(x - 20, y + 10);
-        ctx.fill();
-        ctx.moveTo(x - 20, y + 10);
-        ctx.lineTo(x, y - 20);
-        ctx.lineTo(x + 20, y + 10);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.roundRect(x - 40, y - 43, 80, 100, 5);
-        ctx.strokeStyle = "Black";
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(x - 20, y + 10, 20, 0, 0.5 * Math.PI);
-        ctx.lineTo(x + 20, y + 30);
-        ctx.arc(x + 20, y + 10, 20, 0.5 * Math.PI, Math.PI);
-        ctx.fill();
-        ctx.stroke();
-    }
-    function drawClub(x, y) {
-        ctx.beginPath();
-        ctx.arc(x-10, y+10, 10, 0, 1.6*Math.PI);
-        ctx.fillStyle = "Green";
-        ctx.strokeStyle = "Green";
-        ctx.arc(x+10, y+10, 10, 1.5*Math.PI, Math.PI);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(x, y-4, 10, 0, 2*Math.PI);
-        ctx.fill()
-        ctx.stroke()
-        ctx.beginPath();
-        ctx.roundRect(x-40, y-43, 80, 100, 5);
-        ctx.strokeStyle ="Black";
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
-        ctx.lineTo(x+20, y+30);
-        ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
-        ctx.fillStyle = "Green";
-        ctx.fill();
-        ctx.strokeStyle = "Green";
-        ctx.stroke();
-    }
-    function drawDiamond(x, y) {
-    	ctx.beginPath();
-     	ctx.roundRect(x-40, y-43, 80, 100, 5);
-        ctx.strokeStyle ="Black";
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y-10);
-        ctx.quadraticCurveTo(x+4, y+6, x+15, y+10);
-        ctx.quadraticCurveTo(x+4, y+14, x, y+30);
-        ctx.quadraticCurveTo(x-4, y+14, x-15, y+10);
-        ctx.quadraticCurveTo(x-4, y+6, x, y-10);
-        ctx.fillStyle = "Blue";
-        ctx.fill();
-        ctx.strokeStyle = "Blue";
-        ctx.stroke();
-    }
-
-    switch (suit) {
-        case "Hearts": {
-            drawHeart(x, y);
-            ctx.font = "28px Arial";
-            ctx.fillStyle = "Tomato";
-        }
-        break;
-        case "Spades": {
-            drawSpade(x, y);
-            ctx.font = "28px Arial";
-            ctx.fillStyle = "Black";
-        }
-        break;
-        case "Diamonds": {
-            drawDiamond(x, y);
-            ctx.font = "28px Arial";
-            ctx.fillStyle = "Blue";      
-        }
-        break;
-        case "Clubs": {
-            drawClub(x, y);
-            ctx.font = "28px Arial";
-            ctx.fillStyle = "Green";
-        }
-        break;
-    }
-    ctx.fillText(value, x - 34, y - 20);
 }
 
 function loginRedirect() {
@@ -368,7 +400,7 @@ function register(info) {
 
 function login(loginfo) {
     let sendata = { "type": "salt", "value": loginfo.uname };
-    var salt = send(sendata);
+    salt = send(sendata);
     sendata = { "type": "login", "value": loginfo };
     send(sendata);
 }
