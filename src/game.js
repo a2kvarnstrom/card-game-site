@@ -193,6 +193,10 @@ class Card {
 }
 
 function switchUser() {
+    if (cardsDealt != 0) {
+        location.href = "rules.html";
+        return;
+    }
     tempuser++;
     if(tempuser >= playerCount + 1) {
         tempuser = 1;
