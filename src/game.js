@@ -292,27 +292,39 @@ function convertCard(card) {
     }
     cardID = new Card(suit, value)
     hands.push(cardID);
-    console.log(JSON.stringify(hands));
+    console.log(hands);
     return cardID
 }
 
 function generateCards() {
     // button press
-    if (aCards.length <= doublePCount + 3) {
+    if (aCards.length <= doublePCount + 5) {
         refillCards();
     }
 
     // sets the amount of cards to deal depending on the turn
+    // deal to players
     if (cardsDealt == 0) {
         j = doublePCount;
-    } else if (cardsDealt == doublePCount) {
+    } 
+    // deal on table
+    else if (cardsDealt == doublePCount) {
         j = 3;
-    } else if (cardsDealt == doublePCount + 3) {
+    } 
+    // one more card
+    else if (cardsDealt == doublePCount + 3) {
         j = 1;
-    } else if (cardsDealt == doublePCount + 4) {
+    } 
+    // another card because it doesnt want to if i do it the way i want
+    else if (cardsDealt == doublePCount + 4) {
+        j = 1;
+    }
+    // ends round
+    else if (cardsDealt == doublePCount + 5) {
         endRound();
     }
 
+    // for loop at home:
     while (true) {
         if (j == 0) {
             break;
@@ -320,9 +332,6 @@ function generateCards() {
         let cadr = pickCard();
         deal(cadr);
         j--;
-    }
-    if (cardsDealt == doublePCount + 4) {
-        j = doublePCount;
     }
 }
 
