@@ -194,7 +194,7 @@ class Card {
         ctx.fillText(value, x - 34, y - 20);
     }
     drawFaceDown(x, y) {
-        this.draw("FaceDown", undefined, x, y);
+        this.draw("FaceDown", 69, x, y);
     }
 }
 
