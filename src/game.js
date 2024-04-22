@@ -184,7 +184,7 @@ class Card {
         this.drawCard("FaceDown", 69, x, y);
     }
     draw(suit, value, x, y) {
-        this.drawFaceDown(x, y);
+        this.drawCard("Frame", 69, x, y);
         this.drawCard(suit, value, x, y);
     }
     drawFace(suit, value, x, y) {
