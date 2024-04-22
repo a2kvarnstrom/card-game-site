@@ -243,9 +243,6 @@ function convertCard(card) {
     }
     if (value != "Joker") {
         switch (value) {
-            case 1:
-                value = "A";
-                break;
             case 11:
                 value = "J";
                 break;
@@ -255,12 +252,10 @@ function convertCard(card) {
             case 13:
                 value = "K";
                 break;
+            case 1:
             case 14:
-                value = "A";
-                break;
             case 15:
                 value = "A";
-            default:
                 break;
         }
         suit = card % 4;
