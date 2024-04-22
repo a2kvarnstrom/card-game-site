@@ -15,6 +15,7 @@ let myGameArea = {
     }
 }
 
+let o = 0;
 let state = 0;
 let playerCount = 2;
 let doublePCount = playerCount * 2;
@@ -38,6 +39,7 @@ let cardID;
 let playerToDeal;
 let salt;
 let coords = [];
+let d;
 
 let buttons = {
 	call : document.createElement("button"),
@@ -298,7 +300,6 @@ function convertCard(card) {
 }
 
 function generateCards() {
-    let o;
     // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -323,13 +324,14 @@ function generateCards() {
     }
     // ends round
     else if (cardsDealt == doublePCount + 5) {
-        o = 0;
         showCards();
+        if(o == 1) {
+            endRound();
+            return;
+        }
+        o++;
+
     }
-    if(o == 1) {
-        endRound();
-    }
-    o++;
 
     // for loop at home:
     while (true) {
@@ -391,11 +393,12 @@ function giveCard(player, value, suit) {
 }
 
 function showCards() {
+    // cancer
     switch(playerCount) {
         case 2:
             switch(user) {
                 case "player1":
-                    let d = hands[1];
+                    d = hands[1];
                     cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
                     d = hands[3];
                     cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
@@ -409,11 +412,113 @@ function showCards() {
                 default:
                     location.href = "rules.html"
             }
+            break;
+        case 3:
+            switch(user) {
+                case "player1":
+                    d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[4];
+                    cardID.drawFace(d.suit, d.value, coords[4]["x"], coords[4]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    d = hands[5];
+                    cardID.drawFace(d.suit, d.value, coords[5]["x"], coords[5]["y"]);
+                    break;
+                case "player2":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    d = hands[5];
+                    cardID.drawFace(d.suit, d.value, coords[5]["x"], coords[5]["y"]);
+                    break;
+                case "player3":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    d = hands[4];
+                    cardID.drawFace(d.suit, d.value, coords[4]["x"], coords[4]["y"]);
+                    break;
+                default:
+                    location.href = "rules.html"
+            }
+            break;
+        case 4:
+            switch(user) {
+                case "player1":
+                    d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    d = hands[5];
+                    cardID.drawFace(d.suit, d.value, coords[5]["x"], coords[5]["y"]);
+                    d = hands[6];
+                    cardID.drawFace(d.suit, d.value, coords[6]["x"], coords[6]["y"]);
+                    d = hands[7];
+                    cardID.drawFace(d.suit, d.value, coords[7]["x"], coords[7]["y"]);
+                    break;
+                case "player2":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    d = hands[4];
+                    cardID.drawFace(d.suit, d.value, coords[4]["x"], coords[4]["y"]);
+                    d = hands[6];
+                    cardID.drawFace(d.suit, d.value, coords[6]["x"], coords[6]["y"]);
+                    d = hands[7];
+                    cardID.drawFace(d.suit, d.value, coords[7]["x"], coords[7]["y"]);
+                    break;
+                case "player3":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    d = hands[4];
+                    cardID.drawFace(d.suit, d.value, coords[4]["x"], coords[4]["y"]);
+                    d = hands[5];
+                    cardID.drawFace(d.suit, d.value, coords[5]["x"], coords[5]["y"]);
+                    d = hands[7];
+                    cardID.drawFace(d.suit, d.value, coords[7]["x"], coords[7]["y"]);
+                    break;
+                case "player4":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    d = hands[4];
+                    cardID.drawFace(d.suit, d.value, coords[4]["x"], coords[4]["y"]);
+                    d = hands[5];
+                    cardID.drawFace(d.suit, d.value, coords[5]["x"], coords[5]["y"]);
+                    d = hands[6];
+                    cardID.drawFace(d.suit, d.value, coords[6]["x"], coords[6]["y"]);
+                    break;
+                default:
+                    location.href = "rules.html"
+            }
+            break;
+        default:
+            location.href = "rules.html"
     }
 }
 
 function endRound() {
     // resets everything
+    o = 0;
     j = 0;
     cardsDealt = 0;
     ctx.clearRect(0, 0, c.width, c.height);
