@@ -37,6 +37,7 @@ let hands = [];
 let cardID;
 let playerToDeal;
 let salt;
+let coords = [];
 
 let buttons = {
 	call : document.createElement("button"),
@@ -184,7 +185,7 @@ class Card {
         this.drawFaceDown(x, y);
         this.drawCard(suit, value, x, y);
     }
-    fillFaceDown(suit, value, x, y) {
+    drawFace(suit, value, x, y) {
         this.drawCard(suit, value, x, y);
     }
 }
@@ -297,6 +298,7 @@ function convertCard(card) {
 }
 
 function generateCards() {
+    let o;
     // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -321,8 +323,13 @@ function generateCards() {
     }
     // ends round
     else if (cardsDealt == doublePCount + 5) {
+        o = 0;
+        showCards();
+    }
+    if(o == 1) {
         endRound();
     }
+    o++;
 
     // for loop at home:
     while (true) {
@@ -379,7 +386,30 @@ function giveCard(player, value, suit) {
     } else {
         cardID.drawFaceDown(cardX, cardY);
     }
+    coords.push({"x":cardX,"y":cardY});
     cardX += 100;
+}
+
+function showCards() {
+    switch(playerCount) {
+        case 2:
+            switch(user) {
+                case "player1":
+                    let d = hands[1];
+                    cardID.drawFace(d.suit, d.value, coords[1]["x"], coords[1]["y"]);
+                    d = hands[3];
+                    cardID.drawFace(d.suit, d.value, coords[3]["x"], coords[3]["y"]);
+                    break;
+                case "player2":
+                    d = hands[0];
+                    cardID.drawFace(d.suit, d.value, coords[0]["x"], coords[0]["y"]);
+                    d = hands[2];
+                    cardID.drawFace(d.suit, d.value, coords[2]["x"], coords[2]["y"]);
+                    break;
+                default:
+                    location.href = "rules.html"
+            }
+    }
 }
 
 function endRound() {
