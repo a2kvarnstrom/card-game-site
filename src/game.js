@@ -66,7 +66,7 @@ class Card {
     	this.suit = suit;
         this.value = value;
     }
-    draw(suit, value, x, y) {
+    drawCard(suit, value, x, y) {
         // ion fuckin know
         function drawHeart(x, y) {
             ctx.beginPath();
@@ -83,10 +83,6 @@ class Card {
             ctx.lineTo(x - 20, y);
             ctx.fill();
             ctx.stroke();
-            ctx.beginPath();
-            ctx.roundRect(x - 40, y - 43, 80, 100, 5);
-            ctx.strokeStyle = "Black";
-            ctx.stroke();
         }
         function drawSpade(x, y) {
             ctx.beginPath();
@@ -102,10 +98,6 @@ class Card {
             ctx.lineTo(x, y - 20);
             ctx.lineTo(x + 20, y + 10);
             ctx.fill();
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.roundRect(x - 40, y - 43, 80, 100, 5);
-            ctx.strokeStyle = "Black";
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(x - 20, y + 10, 20, 0, 0.5 * Math.PI);
@@ -127,10 +119,6 @@ class Card {
             ctx.fill()
             ctx.stroke()
             ctx.beginPath();
-            ctx.roundRect(x-40, y-43, 80, 100, 5);
-            ctx.strokeStyle = "Black";
-            ctx.stroke();
-            ctx.beginPath();
             ctx.arc(x-20, y+10, 20, 0, 0.5*Math.PI);
             ctx.lineTo(x+20, y+30);
             ctx.arc(x+20, y+10, 20, 0.5*Math.PI, Math.PI);
@@ -140,10 +128,6 @@ class Card {
             ctx.stroke();
         }
         function drawDiamond(x, y) {
-            ctx.beginPath();
-            ctx.roundRect(x-40, y-43, 80, 100, 5);
-            ctx.strokeStyle = "Black";
-            ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y-10);
             ctx.quadraticCurveTo(x+4, y+6, x+15, y+10);
@@ -155,13 +139,12 @@ class Card {
             ctx.strokeStyle = "Blue";
             ctx.stroke();
         }
-        function drawFaceDown(x, y) {
+        function drawFrame(x, y) {
             ctx.beginPath();
             ctx.roundRect(x-40, y-43, 80, 100, 5);
             ctx.strokeStyle = "Black";
             ctx.stroke();
         }
-
         switch (suit) {
             case "Hearts":
                 drawHeart(x, y);
@@ -188,13 +171,21 @@ class Card {
                 break;
             
             case "FaceDown":
-                drawFaceDown(x, y);
+            case "Frame":
+                drawFrame(x, y)
                 return;
         }
         ctx.fillText(value, x - 34, y - 20);
     }
     drawFaceDown(x, y) {
-        this.draw("FaceDown", 69, x, y);
+        this.drawCard("FaceDown", 69, x, y);
+    }
+    draw(suit, value, x, y) {
+        this.drawFaceDown(x, y);
+        this.drawCard(suit, value, x, y);
+    }
+    fillFaceDown(suit, value, x, y) {
+        this.drawCard(suit, value, x, y);
     }
 }
 
@@ -284,24 +275,24 @@ function convertCard(card) {
                 break;
         }
         suit = card % 4;
-        suit++;
         switch (suit) {
-            case 1:
+            case 0:
                 suit = "Hearts";
                 break;
-            case 2:
+            case 1:
                 suit = "Diamonds";
                 break;
-            case 3:
+            case 2:
                 suit = "Clubs";
                 break;
-            case 4:
+            case 3:
                 suit = "Spades";
                 break;
         }
     }
     cardID = new Card(suit, value)
     hands.push(cardID);
+    console.log(JSON.stringify(hands));
     return cardID
 }
 
@@ -341,13 +332,6 @@ function deal(card) {
     // see which players turn it is to get a card
     // this is for a variable amount of players
     y = cardsDealt % playerCount;
-    
-    // check if joker
-    if (card.value != "Joker") {
-        var name = card.value + " of " + card.suit;
-    } else {
-        var name = "Joker";
-    }
 
     // fixes which player to deal to
     playerToDeal = y % doublePCount;
@@ -361,24 +345,24 @@ function deal(card) {
     if (cardsDealt <= doublePCount) {
         switch (playerToDeal) {
             case 0:
-                giveCard("player1", name, card.value, card.suit);
+                giveCard("player1", card.value, card.suit);
                 break;
             case 1:
-                giveCard("player2", name, card.value, card.suit);
+                giveCard("player2", card.value, card.suit);
                 break;
             case 2:
-                giveCard("player3", name, card.value, card.suit);
+                giveCard("player3", card.value, card.suit);
                 break;
             case 3:
-                giveCard("player4", name, card.value, card.suit);
+                giveCard("player4", card.value, card.suit);
                 break;
         }
     } else {
-        giveCard("table", name, card.value, card.suit);
+        giveCard("table", card.value, card.suit);
     }
 }
 
-function giveCard(player, card, value, suit) {
+function giveCard(player, value, suit) {
     if(user == player) {
         cardID.draw(suit, value, cardX, cardY);
     } else if(player == "table") {
