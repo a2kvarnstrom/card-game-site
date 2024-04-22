@@ -375,7 +375,6 @@ function deal(card) {
 }
 
 function giveCard(player, card, value, suit) {
-    document.getElementById(`${player}`).innerHTML += card + " | ";
     if(user == player) {
         cardID.draw(suit, value, cardX, cardY);
     } else if(player == "table") {
@@ -390,11 +389,6 @@ function endRound() {
     // resets everything
     j = 0;
     cardsDealt = 0;
-    document.getElementById("player1").innerHTML = "empty - ";
-    document.getElementById("player2").innerHTML = "empty - ";
-    document.getElementById("player3").innerHTML = "empty - ";
-    document.getElementById("player4").innerHTML = "empty - ";
-    document.getElementById("table").innerHTML = "table - ";
     ctx.clearRect(0, 0, c.width, c.height);
     hands = [];
     cardX = 60;
