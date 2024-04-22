@@ -224,6 +224,7 @@ function updateGameArea() {
 function increasePlayerCount() {
     if (cardsDealt != 0) {
         location.href = "rules.html";
+        return;
     }
     if (playerCount <= 3) {
         playerCount++;
@@ -235,6 +236,7 @@ function increasePlayerCount() {
 function decreasePlayerCount() {
     if (cardsDealt != 0) {
         location.href = "rules.html";
+        return;
     }
     if (playerCount >= 3) {
         playerCount--;
