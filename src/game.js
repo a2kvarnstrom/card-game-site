@@ -41,29 +41,6 @@ let salt;
 let coords = [];
 let d;
 
-let buttons = {
-	call : document.createElement("button"),
-    fold : document.createElement("button"),
-    check : document.createElement("button"),
-    raise : document.createElement("button"),
-    initialize : function() {
-        this.call.setAttribute("id", "call"),
-        this.fold.setAttribute("id", "fold"),
-        this.check.setAttribute("id", "check"),
-        this.raise.setAttribute("id", "raise"),
-        this.call.setAttribute("class", "button call"),
-        this.fold.setAttribute("class", "button fold"),
-        this.check.setAttribute("class", "button check"),
-        this.raise.setAttribute("class", "button raise"),
-    	this.fold.innerHTML = "fold",
-        this.call.innerHTML = "call",
-        this.raise.innerHTML = "raise",
-        this.check.innerHTML = "check"
-    }
-}
-
-buttons.initialize();
-
 class Card {
 	constructor(suit, value) {
     	this.suit = suit;
