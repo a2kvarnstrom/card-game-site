@@ -241,6 +241,7 @@ function decreasePlayerCount() {
     }
     if(tempuser >= playerCount + 1) {
         tempuser = 1;
+        user = `player${tempuser}`;
     }
     doublePCount = playerCount * 2;
     document.getElementById("playercount").innerHTML = "Player Count: " + playerCount;
