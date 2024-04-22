@@ -329,8 +329,8 @@ function generateCards() {
         if (j == 0) {
             break;
         }
-        let cadr = pickCard();
-        deal(cadr);
+        let card = pickCard();
+        deal(card);
         j--;
     }
 }
