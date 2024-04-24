@@ -57,6 +57,7 @@ let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
 let folded;
+let crands = {};
 
 class Card {
 	constructor(suit, value) {
@@ -304,7 +305,7 @@ function convertCard(card) {
     return cardID
 }
 
-function generateCards() {
+async function generateCards() {
     if(chips == 0) {
         folded = true;
     }
@@ -337,6 +338,8 @@ function generateCards() {
             return;
         }
         o++;
+        await sleep(2000);
+        endRound();
     }
     // one more card
     else if (cardsDealt >= doublePCount + 3) {
@@ -406,7 +409,7 @@ function giveCard(player, value, suit) {
     cardX += 100;
 }
 
-async function showCards() {
+function showCards() {
     let j;
     // cancer
     switch(playerCount) {
@@ -494,8 +497,6 @@ async function showCards() {
         default:
             location.href = "rules.html"
     }
-    await sleep(1000);
-    endRound();
 }
 
 function endRound() {
@@ -519,17 +520,26 @@ function endRound() {
 }
 
 function call() {
+    if(folded == true) {
+        return;
+    }
     if(currentBet >> chips) {
         bet = chips;
     }
 }
 
 function fold() {
+    if(folded == true) {
+        return;
+    }
     folded = true;
     generateCards();
 }
 
 function check() {
+    if(folded == true) {
+        return;
+    }
     if(currentBet == 0) {
         bet = 0;
         generateCards();
@@ -537,6 +547,9 @@ function check() {
 }
 
 function raise() {
+    if(folded == true) {
+        return;
+    }
     if(chips == 0) {
         folded = true;
         generateCards();
