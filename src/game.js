@@ -22,7 +22,7 @@ let myGameArea = {
 document.getElementById("ShowCards").hidden = true;
 document.getElementById("betBar").hidden = true;
 document.getElementById("bet").hidden = true;
-document.getElementById("betBar").addEventListener("click", choosebet);
+document.getElementById("betBar").addEventListener("mousedown", choosebet);
 
 let o = 0;
 let state = 0;
@@ -57,7 +57,23 @@ let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
 let folded;
-let crands = {};
+let cards = {
+    "player1" : [
+
+    ],
+    "player2" : [
+
+    ],
+    "player3" : [
+
+    ],
+    "player4" : [
+
+    ],
+    "table" : [
+            
+    ]
+};
 
 class Card {
 	constructor(suit, value) {
@@ -316,6 +332,7 @@ async function generateCards() {
     bet = 0;
     currentBet = 0;
     document.getElementById("chips").innerHTML = "Chips: " + chips;
+    document.getElementById("pot").innerHTML = "Pot: " + pot;
     // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -381,19 +398,24 @@ function deal(card) {
         switch (playerToDeal) {
             case 0:
                 giveCard("player1", card.value, card.suit);
+                cards.player1.push(card);
                 break;
             case 1:
                 giveCard("player2", card.value, card.suit);
+                cards.player2.push(card);
                 break;
             case 2:
                 giveCard("player3", card.value, card.suit);
+                cards.player3.push(card);
                 break;
             case 3:
                 giveCard("player4", card.value, card.suit);
+                cards.player4.push(card);
                 break;
         }
     } else {
         giveCard("table", card.value, card.suit);
+        cards.table.push(card);
     }
 }
 
@@ -501,6 +523,23 @@ function showCards() {
 
 function endRound() {
     // resets everything
+    cards = {
+        "player1" : [
+    
+        ],
+        "player2" : [
+    
+        ],
+        "player3" : [
+    
+        ],
+        "player4" : [
+    
+        ],
+        "table" : [
+            
+        ]
+    };
     document.getElementById("ShowCards").hidden = true;
     if(chips != 0) {
         folded = false;
