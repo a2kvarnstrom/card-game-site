@@ -15,9 +15,9 @@ let myGameArea = {
     }
 }
 
-document.getElementById("myProgress").hidden = true;
-document.getElementById("progress").hidden = true;
-document.getElementById("myProgress").addEventListener("click", choosebet);
+document.getElementById("betBar").hidden = true;
+document.getElementById("bet").hidden = true;
+document.getElementById("betBar").addEventListener("click", choosebet);
 
 
 let o = 0;
@@ -520,17 +520,20 @@ function endRound() {
 }
 
 function raise() {
-    document.getElementById("myProgress").hidden = false;
-    document.getElementById("progress").hidden = false;
+    if(document.getElementById("bet").hidden == false) {
+        return;
+    }
+    document.getElementById("betBar").hidden = false;
+    document.getElementById("bet").hidden = false;
     let j = minBet / chips;
     let bet = minBet;
     let width = j * 100;
-    document.getElementById("progress").innerHTML = "bet: " + bet;
-    document.getElementById("myBar").style.width = width + "%";
+    document.getElementById("bet").innerHTML = "bet: " + bet;
+    document.getElementById("bar").style.width = width + "%";
 }
 
 function choosebet(e) {
-    let pxval = document.getElementById("myProgress").clientWidth;
+    let pxval = document.getElementById("betBar").clientWidth;
     let maxWidth = pxval / 100;
     // e = Mouse Click Event
     let rect = e.target.getBoundingClientRect();
@@ -555,8 +558,8 @@ function choosebet(e) {
         bet = minBet;
         width = j * 100;
     }
-    document.getElementById("progress").innerHTML = "bet: " + bet;
-    document.getElementById("myBar").style.width = width + "%";
+    document.getElementById("bet").innerHTML = "bet: " + bet;
+    document.getElementById("bar").style.width = width + "%";
 }
 
 function loginRedirect() {

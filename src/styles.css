@@ -148,13 +148,13 @@ canvas {
 
 /* Progress Bar Styles */
 
-#myProgress {
+#betBar {
     width: 50%;
     background-color: white;
     text-align: right;
 }
 
-#myBar {
+#bar {
     width: 1%;
     height: 30px;
     background-color: #00c649;
