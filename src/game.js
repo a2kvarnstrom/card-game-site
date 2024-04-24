@@ -1,3 +1,10 @@
+document.getElementById("betBar").addEventListener("mouseover", () => {
+    document.body.style.cursor = "pointer";
+});
+document.getElementById("betBar").addEventListener("mouseout", () => {
+    document.body.style.cursor = "default";
+});
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -19,13 +26,7 @@ let myGameArea = {
     }
 }
 
-if(location.href == "play.html") {
-    document.getElementById("ShowCards").hidden = true;
-    document.getElementById("betBar").hidden = true;
-    document.getElementById("bet").hidden = true;
-    document.getElementById("betBar").addEventListener("mousedown", choosebet);
-}
-
+let isChoosing;
 let o = 0;
 let state = 0;
 let playerCount = 2;
@@ -525,6 +526,13 @@ function showCards() {
 
 function endRound() {
     // resets everything
+    isChoosing = false;
+    document.getElementById("betBar").addEventListener('mousedown', (e) => {
+        isChoosing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+    document.getElementById("betBar").addEventListener('mousemove', choosebet);
+    document.getElementById("betBar").addEventListener('mouseup', () => isChoosing = false);
     cards = {
         "player1" : [
     
@@ -617,6 +625,7 @@ function raise() {
 }
 
 function choosebet(e) {
+    if(!isChoosing) return;
     // sets the bet and how much of the bar it loads
     // 
     let pxval = document.getElementById("betBar").clientWidth;
