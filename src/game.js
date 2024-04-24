@@ -19,10 +19,12 @@ let myGameArea = {
     }
 }
 
-document.getElementById("ShowCards").hidden = true;
-document.getElementById("betBar").hidden = true;
-document.getElementById("bet").hidden = true;
-document.getElementById("betBar").addEventListener("mousedown", choosebet);
+if(location.href == "play.html") {
+    document.getElementById("ShowCards").hidden = true;
+    document.getElementById("betBar").hidden = true;
+    document.getElementById("bet").hidden = true;
+    document.getElementById("betBar").addEventListener("mousedown", choosebet);
+}
 
 let o = 0;
 let state = 0;
