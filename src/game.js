@@ -303,14 +303,6 @@ function generateCards() {
     else if (cardsDealt == doublePCount) {
         j = 3;
     } 
-    // one more card
-    else if (cardsDealt == doublePCount + 3) {
-        j = 1;
-    } 
-    // another card because it doesnt want to if i do it the way i want
-    else if (cardsDealt == doublePCount + 4) {
-        j = 1;
-    }
     // ends round
     else if (cardsDealt == doublePCount + 5) {
         showCards();
@@ -319,9 +311,12 @@ function generateCards() {
             return;
         }
         o++;
-
     }
 
+    // one more card
+    else if (cardsDealt == doublePCount + 3) {
+        j = 1;
+    } 
     // for loop at home:
     while (true) {
         if (j == 0) {
