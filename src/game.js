@@ -1,3 +1,7 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
@@ -15,10 +19,10 @@ let myGameArea = {
     }
 }
 
+document.getElementById("ShowCards").hidden = true;
 document.getElementById("betBar").hidden = true;
 document.getElementById("bet").hidden = true;
 document.getElementById("betBar").addEventListener("click", choosebet);
-
 
 let o = 0;
 let state = 0;
@@ -52,6 +56,7 @@ let pot = 0;
 let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
+let folded;
 
 class Card {
 	constructor(suit, value) {
@@ -206,9 +211,8 @@ function refillCards() {
 
 function startGame() {
     myGameArea.start();
-    endRound();
     refillCards();
-    generateCards();
+    endRound();
 }
 
 function updateGameArea() {
@@ -301,13 +305,15 @@ function convertCard(card) {
 }
 
 function generateCards() {
+    if(chips == 0) {
+        folded = true;
+    }
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
     chips = chips - bet;
     pot = pot + currentBet;
     bet = 0;
     currentBet = 0;
-    console.log(pot);
     document.getElementById("chips").innerHTML = "Chips: " + chips;
     // button press
     if (aCards.length <= doublePCount + 5) {
@@ -325,7 +331,7 @@ function generateCards() {
     } 
     // ends round
     else if (cardsDealt == doublePCount + 5) {
-        showCards();
+        document.getElementById("ShowCards").hidden = false;
         if(o == 1) {
             endRound();
             return;
@@ -344,6 +350,11 @@ function generateCards() {
         let card = pickCard();
         deal(card);
         j--;
+    }
+    if(folded == true) {
+        if(o == 0) {
+            generateCards();
+        }
     }
 }
 
@@ -395,7 +406,7 @@ function giveCard(player, value, suit) {
     cardX += 100;
 }
 
-function showCards() {
+async function showCards() {
     let j;
     // cancer
     switch(playerCount) {
@@ -483,10 +494,19 @@ function showCards() {
         default:
             location.href = "rules.html"
     }
+    await sleep(1000);
+    endRound();
 }
 
 function endRound() {
     // resets everything
+    document.getElementById("ShowCards").hidden = true;
+    if(chips != 0) {
+        folded = false;
+    } else {
+        alert("you lose lol");
+        location.href = "index.html";
+    }
     pot = 0;
     o = 0;
     j = 0;
@@ -495,14 +515,33 @@ function endRound() {
     hands = [];
     cardX = 60;
     cardY = 60;
-}
-
-function check() {
-    bet = 0;
     generateCards();
 }
 
+function call() {
+    if(currentBet >> chips) {
+        bet = chips;
+    }
+}
+
+function fold() {
+    folded = true;
+    generateCards();
+}
+
+function check() {
+    if(currentBet == 0) {
+        bet = 0;
+        generateCards();
+    }
+}
+
 function raise() {
+    if(chips == 0) {
+        folded = true;
+        generateCards();
+        return;
+    }
     // shows the "progress" bar with the bet
     // 
     if(document.getElementById("bet").hidden == false) {
@@ -557,6 +596,9 @@ function choosebet(e) {
     }
     document.getElementById("bet").innerHTML = "bet: " + bet;
     document.getElementById("bar").style.width = width + "%";
+    if(bet == chips) {
+        document.getElementById("bet").innerHTML = "bet: ALL IN";
+    }
 }
 
 function loginRedirect() {

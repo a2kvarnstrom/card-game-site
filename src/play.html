@@ -42,15 +42,17 @@
             </div>
             <div class="buttons">
                 <button class="button" type="button" onclick="switchUser()">switch user</button>
+                <button id="ShowCards" type="button" onclick="showCards()">Show Cards</button>
                 <div class="plusminusplayers">
                     <button class="minusbutton" type="button" onclick="decreasePlayerCount()">-</button>
                     <button class="plusbutton" type="button" onclick="increasePlayerCount()">+</button>
                     <p id="playercount">Player Count: 2</p>
                     <p id="chips">Chips: 50</p>
+                    <p id="pot">Pot: 0</p>
                 </div>
                 <div class="play">
-                    <button class="button call" id="call" type="button">CALL</button>
-                    <button class="button fold" id="fold" type="button">FOLD</button>
+                    <button class="button call" id="call" type="button" onclick="call()">CALL</button>
+                    <button class="button fold" id="fold" type="button" onclick="fold()">FOLD</button>
                     <button class="button check" id="check" type="button" onclick="check()">CHECK</button>
                     <button class="button raise" id="raise" type="button" onclick="raise()">RAISE</button>
                     <div id="betBar">
