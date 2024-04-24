@@ -544,6 +544,9 @@ function choosebet(e) {
     bet = chips * i;
     bet = Math.ceil(bet);
     // checks if bet is lower than minimum
+    let j = bet / chips;
+    // makes one width per bet (you could have less than max width but max bet)
+    width = j * 100;
     if(bet >= chips) {
         bet = chips;
     }
