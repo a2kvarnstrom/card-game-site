@@ -46,8 +46,12 @@ let salt;
 let coords = [];
 let d;
 let chips = 50;
-let bet;
+let bet = 0;
 let minBet = 2;
+let pot = 0;
+let currentBet = 0;
+let sBlind = minBet;
+let bBlind = minBet * 2;
 
 class Card {
 	constructor(suit, value) {
@@ -204,6 +208,7 @@ function startGame() {
     myGameArea.start();
     endRound();
     refillCards();
+    generateCards();
 }
 
 function updateGameArea() {
@@ -292,13 +297,18 @@ function convertCard(card) {
     }
     cardID = new Card(suit, value)
     hands.push(cardID);
-    console.log(hands);
     return cardID
 }
 
 function generateCards() {
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
+    chips = chips - bet;
+    pot = pot + currentBet;
+    bet = 0;
+    currentBet = 0;
+    console.log(pot);
+    document.getElementById("chips").innerHTML = "Chips: " + chips;
     // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -477,6 +487,7 @@ function showCards() {
 
 function endRound() {
     // resets everything
+    pot = 0;
     o = 0;
     j = 0;
     cardsDealt = 0;
@@ -486,17 +497,28 @@ function endRound() {
     cardY = 60;
 }
 
+function check() {
+    bet = 0;
+    generateCards();
+}
+
 function raise() {
     // shows the "progress" bar with the bet
     // 
     if(document.getElementById("bet").hidden == false) {
+        currentBet = currentBet + bet;
+        generateCards();
         return;
     }
     document.getElementById("betBar").hidden = false;
     document.getElementById("bet").hidden = false;
     let j = minBet / chips;
-    let bet = minBet;
+    bet = minBet;
     let width = j * 100;
+    if(minBet >> chips) {
+        bet = chips;
+        width = 100;
+    }
     document.getElementById("bet").innerHTML = "bet: " + bet;
     document.getElementById("bar").style.width = width + "%";
 }
@@ -528,6 +550,10 @@ function choosebet(e) {
         let j = minBet / chips;
         bet = minBet;
         width = j * 100;
+    }
+    if(minBet >> chips) {
+        bet = chips;
+        width = 50;
     }
     document.getElementById("bet").innerHTML = "bet: " + bet;
     document.getElementById("bar").style.width = width + "%";

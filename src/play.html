@@ -41,18 +41,17 @@
                 </div>
             </div>
             <div class="buttons">
-                <button class="button" type="button" onclick="generateCards()">Generate Cards</button>
                 <button class="button" type="button" onclick="switchUser()">switch user</button>
                 <div class="plusminusplayers">
                     <button class="minusbutton" type="button" onclick="decreasePlayerCount()">-</button>
                     <button class="plusbutton" type="button" onclick="increasePlayerCount()">+</button>
                     <p id="playercount">Player Count: 2</p>
-                    <p id="chipcount">Chips: 50</p>
+                    <p id="chips">Chips: 50</p>
                 </div>
                 <div class="play">
                     <button class="button call" id="call" type="button">CALL</button>
                     <button class="button fold" id="fold" type="button">FOLD</button>
-                    <button class="button check" id="check" type="button">CHECK</button>
+                    <button class="button check" id="check" type="button" onclick="check()">CHECK</button>
                     <button class="button raise" id="raise" type="button" onclick="raise()">RAISE</button>
                     <div id="betBar">
                         <div id="bar"></div>
