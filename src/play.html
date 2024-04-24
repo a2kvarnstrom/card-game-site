@@ -47,11 +47,18 @@
                     <button class="minusbutton" type="button" onclick="decreasePlayerCount()">-</button>
                     <button class="plusbutton" type="button" onclick="increasePlayerCount()">+</button>
                     <p id="playercount">Player Count: 2</p>
+                    <p id="chipcount">Chips: 0</p>
                 </div>
-                <button class="button call" id="call">CALL</button>
-                <button class="button fold" id="fold">FOLD</button>
-                <button class="button check" id="check">CHECK</button>
-                <button class="button raise" id="raise">RAISE</button>
+                <div class="play">
+                    <button class="button call" id="call" type="button">CALL</button>
+                    <button class="button fold" id="fold" type="button">FOLD</button>
+                    <button class="button check" id="check" type="button">CHECK</button>
+                    <button class="button raise" id="raise" type="button" onclick="raise()">RAISE</button>
+                    <div id="myProgress">
+                        <div id="myBar"></div>
+                    </div>
+                    <p id="progress">bet: 2</p>
+                </div>
             </div>
         </div>
     </body>

@@ -138,10 +138,26 @@ label {
     color: #780000;
 }
 
-/* Button Section Styles */
+/* Canvas */
 
 canvas {
     border: 3px solid #909090;
     border-radius: 15px;
     background-color: white;
+}
+
+/* Progress Bar Styles */
+
+#myProgress {
+    width: 50%;
+    background-color: white;
+    text-align: right;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #00c649;
+    line-height: 30px;
+    color: white;
 }

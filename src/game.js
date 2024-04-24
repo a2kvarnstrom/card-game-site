@@ -15,6 +15,11 @@ let myGameArea = {
     }
 }
 
+document.getElementById("myProgress").hidden = true;
+document.getElementById("progress").hidden = true;
+document.getElementById("myProgress").addEventListener("click", choosebet);
+
+
 let o = 0;
 let state = 0;
 let playerCount = 2;
@@ -40,6 +45,9 @@ let playerToDeal;
 let salt;
 let coords = [];
 let d;
+let chips = 50;
+let bet;
+let minBet = 2;
 
 class Card {
 	constructor(suit, value) {
@@ -509,6 +517,43 @@ function endRound() {
     hands = [];
     cardX = 60;
     cardY = 60;
+}
+
+function raise() {
+    document.getElementById("myProgress").hidden = false;
+    document.getElementById("progress").hidden = false;
+    let j = minBet / chips;
+    let bet = minBet;
+    let width = j * 100;
+    document.getElementById("progress").innerHTML = "bet: " + bet;
+    document.getElementById("myBar").style.width = width + "%";
+}
+
+function choosebet(e) {
+    let pxval = document.getElementById("myProgress").clientWidth;
+    let maxWidth = pxval / 100;
+    // e = Mouse Click Event
+    let rect = e.target.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    // makes the width scaled to 100 (aka into percentage)
+    let width = x / maxWidth;
+    width = Math.ceil(width);
+    // i is width scaled to 1 (so you can multiply with it)
+    let i = width / 100;
+    // converts click position to bet
+    bet = chips * i;
+    bet = Math.ceil(bet);
+    // checks if bet is lower than minimum
+    if(bet >= chips) {
+        bet = chips;
+    }
+    if(bet <= minBet) {
+        let j = minBet / chips;
+        bet = minBet;
+        width = j * 100;
+    }
+    document.getElementById("progress").innerHTML = "bet: " + bet;
+    document.getElementById("myBar").style.width = width + "%";
 }
 
 function loginRedirect() {
