@@ -532,7 +532,7 @@ function endRound() {
         [lastX, lastY] = [e.offsetX, e.offsetY];
     });
     document.getElementById("betBar").addEventListener('mousemove', choosebet);
-    document.getElementById("betBar").addEventListener('mouseup', () => isChoosing = false);
+    document.body.addEventListener('mouseup', () => isChoosing = false);
     cards = {
         "player1" : [
     
