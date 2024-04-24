@@ -297,6 +297,8 @@ function convertCard(card) {
 }
 
 function generateCards() {
+    document.getElementById("betBar").hidden = true;
+    document.getElementById("bet").hidden = true;
     // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -485,6 +487,8 @@ function endRound() {
 }
 
 function raise() {
+    // shows the "progress" bar with the bet
+    // 
     if(document.getElementById("bet").hidden == false) {
         return;
     }
@@ -498,6 +502,8 @@ function raise() {
 }
 
 function choosebet(e) {
+    // sets the bet and how much of the bar it loads
+    // 
     let pxval = document.getElementById("betBar").clientWidth;
     let maxWidth = pxval / 100;
     // e = Mouse Click Event
