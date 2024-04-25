@@ -325,6 +325,9 @@ function convertCard(card) {
 }
 
 async function generateCards() {
+    if(cardsDealt == doublePCount + 5) {
+        return;
+    }
     let o = 0;
     if(chips == 0) {
         folded = true;
