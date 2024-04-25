@@ -529,8 +529,8 @@ function endRound() {
     document.getElementById("betBar").addEventListener('mousedown', (e) => {
         isChoosing = true;
         [lastX, lastY] = [e.offsetX, e.offsetY];
-        choosebet();
     });
+    document.getElementById("betBar").addEventListener('mousedown', choosebet);
     document.getElementById("betBar").addEventListener('mousemove', choosebet);
     document.body.addEventListener('mouseup', () => isChoosing = false);
     cards = {
