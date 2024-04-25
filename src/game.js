@@ -325,6 +325,7 @@ function convertCard(card) {
 }
 
 async function generateCards() {
+    let o = 0;
     if(chips == 0) {
         folded = true;
     }
@@ -349,17 +350,6 @@ async function generateCards() {
     // deal on table
     else if (cardsDealt == doublePCount) {
         j = 3;
-    } 
-    // ends round
-    else if (cardsDealt == doublePCount + 5) {
-        document.getElementById("ShowCards").hidden = false;
-        if(o == 1) {
-            endRound();
-            return;
-        }
-        o++;
-        await sleep(2000);
-        endRound();
     }
     // one more card
     else if (cardsDealt >= doublePCount + 3) {
@@ -373,6 +363,12 @@ async function generateCards() {
         let card = pickCard();
         deal(card);
         j--;
+    }
+    if(cardsDealt == doublePCount + 5) {
+        document.getElementById("ShowCards").hidden = false;
+        o++;
+        await sleep(2000);
+        endRound();
     }
     if(folded == true) {
         if(o == 0) {
