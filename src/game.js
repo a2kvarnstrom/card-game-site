@@ -684,6 +684,7 @@ function register(info) {
 }
 
 function login(loginfo) {
+    let salt;
     let sendata = { "type": "salt", "value": loginfo.uname };
     salt = send(sendata);
     sendata = { "type": "login", "value": loginfo };
