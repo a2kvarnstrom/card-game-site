@@ -761,7 +761,7 @@ function login(loginfo) {
 
 async function send(data) {
     a = JSON.stringify(data);
-    let response = await fetch("http://pokertexas.duckdns.net/", {
+    let response = await fetch("http://pokertexas.duckdns.org/", {
         credentials: "same-origin",
         method: "POST",
         body: a,
