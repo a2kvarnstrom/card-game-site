@@ -754,13 +754,13 @@ function register(info) {
 function login(loginfo) {
     let salt;
     let sendata = { "type": "salt", "value": loginfo.uname };
-    salt = send(sendata);
+    salt = pysend(sendata);
     console.log(salt);
     sendata = { "type": "login", "value": loginfo };
-    send(sendata);
+    pysend(sendata);
 }
 
-async function send(data) {
+/*async function send(data) {
     a = JSON.stringify(data);
     let response = await fetch("http://pokertexas.duckdns.org/", {
         credentials: "same-origin",
@@ -771,4 +771,19 @@ async function send(data) {
         }
     });
     console.log(response.text());
+}*/
+
+async function pysend(data) {
+    a = JSON.stringify(data);
+    let response = await fetch("http://uxhebxje.ddns.net/", {
+        port: 1199,
+        credentials: "same-origin",
+        method: "POST",
+        body: a,
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
+    console.log(response.text());
+    return response.text();
 }
