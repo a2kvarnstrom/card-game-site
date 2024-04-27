@@ -1,10 +1,11 @@
-document.getElementById("betBar").addEventListener("mouseover", () => {
-    document.body.style.cursor = "pointer";
-});
-document.getElementById("betBar").addEventListener("mouseout", () => {
-    document.body.style.cursor = "default";
-});
-
+if(location.href == "play.html") {
+    document.getElementById("betBar").addEventListener("mouseover", () => {
+        document.body.style.cursor = "pointer";
+    });
+    document.getElementById("betBar").addEventListener("mouseout", () => {
+        document.body.style.cursor = "default";
+    });
+}
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
