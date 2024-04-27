@@ -17,7 +17,7 @@ let myGameArea = {
         this.canvas.height = 720;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[2]);
-        // this.interval = setInterval(updateGameArea, 20);
+        this.interval = setInterval(updateGameArea, 20);
         c = this.canvas;
         ctx = c.getContext("2d");
     },
@@ -52,14 +52,20 @@ let playerToDeal;
 let salt = undefined;
 let coords = [];
 let d;
-let chips = 50;
+let chips = {
+    1:50,
+    2:50,
+    3:50,
+    4:50
+};
 let bet = 0;
 let minBet = 2;
 let pot = 0;
 let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
-let folded;
+let folded = false;
+currentPlayer = 0;
 let cards = {
     "player1" : [
 
@@ -79,13 +85,17 @@ let cards = {
 };
 
 class Card {
-	constructor(suit, value) {
+	constructor(suit, value, x, y) {
     	this.suit = suit;
         this.value = value;
+        this.x = x;
+        this.y = y;
     }
-    drawCard(suit, value, x, y) {
+    drawCard(suit, value) {
         // ion fuckin know
-        function drawHeart(x, y) {
+        let x = this.x;
+        let y = this.y;
+        function drawHeart() {
             ctx.beginPath();
             ctx.arc(x - 10, y, 10, 0, Math.PI, true);
             ctx.lineTo(x - 20, y);
@@ -194,15 +204,19 @@ class Card {
         }
         ctx.fillText(value, x - 34, y - 20);
     }
-    drawFaceDown(x, y) {
-        this.drawCard("FaceDown", 69, x, y);
+    drawFaceDown() {
+        this.drawCard("FaceDown", 69);
     }
-    draw(suit, value, x, y) {
-        this.drawCard("Frame", 69, x, y);
-        this.drawCard(suit, value, x, y);
+    draw(suit, value) {
+        this.drawCard("Frame", 69);
+        this.drawCard(suit, value);
     }
-    drawFace(suit, value, x, y) {
-        this.drawCard(suit, value, x, y);
+    drawFace(suit, value) {
+        this.drawCard(suit, value);
+    }
+    newPos(x, y) {
+    	this.x += x;
+    	this.y += y;
     }
 }
 
@@ -234,9 +248,22 @@ function startGame() {
     refillCards();
     endRound();
 }
-
+function reDraw() {
+    try {
+        let x = 0;
+        while(true) {
+            hands[x].draw(hands[x].suit, hands[x].value);
+            x++;
+            if(x == cardsDealt) {
+                return;
+            }
+        }
+    }
+    catch(referenceError) {}
+}
 function updateGameArea() {
-    return;
+    myGameArea.clear();
+    reDraw();
 }
 
 function increasePlayerCount() {
@@ -319,7 +346,7 @@ function convertCard(card) {
                 break;
         }
     }
-    cardID = new Card(suit, value)
+    cardID = new Card(suit, value, cardX, cardY)
     hands.push(cardID);
     return cardID
 }
@@ -334,11 +361,11 @@ async function generateCards() {
     }
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
-    chips = chips - bet;
+    chips[currentPlayer] = chips[currentPlayer] - bet;
     pot = pot + currentBet;
     bet = 0;
     currentBet = 0;
-    document.getElementById("chips").innerHTML = "Chips: " + chips;
+    document.getElementById("chips").innerHTML = "Chips: " + chips[1];
     document.getElementById("pot").innerHTML = "Pot: " + pot;
     // button press
     if (aCards.length <= doublePCount + 5) {
@@ -423,11 +450,11 @@ function deal(card) {
 
 function giveCard(player, value, suit) {
     if(user == player) {
-        cardID.draw(suit, value, cardX, cardY);
+        cardID.draw(suit, value);
     } else if(player == "table") {
-        cardID.draw(suit, value, cardX, cardY);
+        cardID.draw(suit, value);
     } else {
-        cardID.drawFaceDown(cardX, cardY);
+        cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
     cardX += 100;
@@ -569,15 +596,26 @@ function endRound() {
 }
 
 function call() {
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
     if(folded == true) {
         return;
     }
     if(currentBet >> chips) {
         bet = chips;
     }
+    generateCards();
 }
 
 function fold() {
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
     if(folded == true) {
         return;
     }
@@ -586,6 +624,11 @@ function fold() {
 }
 
 function check() {
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
     if(folded == true) {
         return;
     }
@@ -596,10 +639,15 @@ function check() {
 }
 
 function raise() {
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
     if(folded == true) {
         return;
     }
-    if(chips == 0) {
+    if(chips[currentPlayer] == 0) {
         folded = true;
         generateCards();
         return;
@@ -616,8 +664,8 @@ function raise() {
     let j = minBet / chips;
     bet = minBet;
     let width = j * 100;
-    if(minBet >> chips) {
-        bet = chips;
+    if(minBet >> chips[currentPlayer]) {
+        bet = chips[currentPlayer];
         width = 100;
     }
     document.getElementById("bet").innerHTML = "bet: " + bet;
@@ -661,6 +709,14 @@ function choosebet(e) {
     document.getElementById("bar").style.width = width + "%";
     if(bet == chips) {
         document.getElementById("bet").innerHTML = "bet: ALL IN";
+    }
+}
+
+function ai() {
+    if(Math.random() >> 0.5) {
+        raise(10);
+    } else{
+        check();
     }
 }
 
