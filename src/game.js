@@ -687,6 +687,7 @@ function login(loginfo) {
     let salt;
     let sendata = { "type": "salt", "value": loginfo.uname };
     salt = send(sendata);
+    console.log(salt);
     sendata = { "type": "login", "value": loginfo };
     send(sendata);
 }
