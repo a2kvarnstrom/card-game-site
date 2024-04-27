@@ -218,6 +218,9 @@ class Card {
     	this.x += x;
     	this.y += y;
     }
+    setPlayer(player) {
+        this.player = player;
+    }
 }
 
 function switchUser() {
@@ -248,11 +251,18 @@ function startGame() {
     refillCards();
     endRound();
 }
+
 function reDraw() {
     try {
         let x = 0;
         while(true) {
-            hands[x].draw(hands[x].suit, hands[x].value);
+            if(user == hands[x].player) {
+                hands[x].draw(hands[x].suit, hands[x].value);
+            } else if(hands[x].player == "table") {
+                hands[x].draw(hands[x].suit, hands[x].value);
+            } else if (user != hands[x].player) {
+                hands[x].drawFaceDown();
+            }
             x++;
             if(x == cardsDealt) {
                 return;
@@ -449,11 +459,12 @@ function deal(card) {
 }
 
 function giveCard(player, value, suit) {
+    cardID.setPlayer(player);
     if(user == player) {
         cardID.draw(suit, value);
     } else if(player == "table") {
         cardID.draw(suit, value);
-    } else {
+    } else if (user != player) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
