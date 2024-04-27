@@ -49,7 +49,7 @@ let cardY;
 let hands = [];
 let cardID;
 let playerToDeal;
-let salt;
+let salt = undefined;
 let coords = [];
 let d;
 let chips = 50;
