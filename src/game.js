@@ -762,8 +762,7 @@ function login(loginfo) {
 
 async function send(data) {
     a = JSON.stringify(data);
-    let response = await fetch("http://pokertexas.duckdns.org/", {
-        port: 2299,
+    let response = await fetch("http://pokertexas.duckdns.org:2299/", {
         credentials: "same-origin",
         method: "POST",
         body: a,
