@@ -754,10 +754,10 @@ function register(info) {
 function login(loginfo) {
     let salt;
     let sendata = { "type": "salt", "value": loginfo.uname };
-    salt = pysend(sendata);
+    salt = send(sendata);
     console.log(salt);
     sendata = { "type": "login", "value": loginfo };
-    pysend(sendata);
+    send(sendata);
 }
 
 async function send(data) {
