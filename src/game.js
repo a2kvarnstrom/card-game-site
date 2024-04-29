@@ -409,7 +409,7 @@ async function generateCards() {
     }
     if(folded == true) {
         if(o == 0) {
-            turn();
+            nextTurn();
         }
     }
 }
@@ -608,7 +608,7 @@ function endRound() {
     hands = [];
     cardX = 60;
     cardY = 60;
-    turn();
+    nextTurn();
 }
 
 function call() {
@@ -620,7 +620,7 @@ function call() {
         bet[currentPlayer] = chips[currentPlayer];
     }
     bet[currentPlayer] = currentBet;
-    turn();
+    nextTurn();
 }
 
 function fold() {
@@ -629,7 +629,7 @@ function fold() {
         return;
     }
     folded = true;
-    turn();
+    nextTurn();
 }
 
 function check() {
@@ -639,7 +639,7 @@ function check() {
     }
     if(currentBet == 0) {
         bet[currentPlayer] = 0;
-        turn();
+        nextTurn();
     }
 }
 
@@ -649,7 +649,7 @@ function raise(amount) {
         raised == currentPlayer;
         bet[currentPlayer] = currentBet + amount;
         currentBet = bet[currentPlayer];
-        turn();
+        nextTurn();
         return;
     }
     if(folded == true) {
@@ -657,13 +657,13 @@ function raise(amount) {
     }
     if(chips[currentPlayer] == 0) {
         folded = true;
-        turn();
+        nextTurn();
         return;
     }
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet[currentPlayer];
         bet[currentPlayer] = currentBet;
-        turn();
+        nextTurn();
         return;
     }
     // shows the "progress" bar with the bet
@@ -721,7 +721,7 @@ function choosebet(e) {
     }
 }
 
-function turn() {
+function nextTurn() {
     if(chips[currentPlayer] == 0) {
         folded = true;
     }
