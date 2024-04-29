@@ -375,32 +375,6 @@ async function generateCards() {
         return;
     }
     let o = 0;
-    if(chips[currentPlayer] == 0) {
-        folded = true;
-    }
-    document.getElementById("betBar").hidden = true;
-    document.getElementById("bet").hidden = true;
-    chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
-    pot = pot + currentBet;
-    document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
-    document.getElementById("pot").innerHTML = "Pot: " + pot;
-    if(currentPlayer != playerCount) {
-        currentPlayer++;
-    } else {
-        currentPlayer = 1;
-    }
-    if(cardsDealt == 0) {
-        currentPlayer = 1;
-    }
-    if(currentPlayer != tempuser) {
-        ai();
-        return;
-    }
-    if(raised != 1) {
-        call();
-    }
-    bet[currentPlayer] = 0;
-    currentBet = 0;
         // button press
     if (aCards.length <= doublePCount + 5) {
         refillCards();
@@ -435,7 +409,7 @@ async function generateCards() {
     }
     if(folded == true) {
         if(o == 0) {
-            generateCards();
+            turn();
         }
     }
 }
@@ -634,7 +608,7 @@ function endRound() {
     hands = [];
     cardX = 60;
     cardY = 60;
-    generateCards();
+    turn();
 }
 
 function call() {
@@ -646,7 +620,7 @@ function call() {
         bet[currentPlayer] = chips[currentPlayer];
     }
     bet[currentPlayer] = currentBet;
-    generateCards();
+    turn();
 }
 
 function fold() {
@@ -655,7 +629,7 @@ function fold() {
         return;
     }
     folded = true;
-    generateCards();
+    turn();
 }
 
 function check() {
@@ -665,7 +639,7 @@ function check() {
     }
     if(currentBet == 0) {
         bet[currentPlayer] = 0;
-        generateCards();
+        turn();
     }
 }
 
@@ -675,7 +649,7 @@ function raise(amount) {
         raised == currentPlayer;
         bet[currentPlayer] = currentBet + amount;
         currentBet = bet[currentPlayer];
-        generateCards();
+        turn();
         return;
     }
     if(folded == true) {
@@ -683,13 +657,13 @@ function raise(amount) {
     }
     if(chips[currentPlayer] == 0) {
         folded = true;
-        generateCards();
+        turn();
         return;
     }
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet[currentPlayer];
         bet[currentPlayer] = currentBet;
-        generateCards();
+        turn();
         return;
     }
     // shows the "progress" bar with the bet
@@ -745,6 +719,36 @@ function choosebet(e) {
     if(bet[currentPlayer] == chips[currentPlayer]) {
         document.getElementById("bet").innerHTML = "bet: ALL IN";
     }
+}
+
+function turn() {
+    if(chips[currentPlayer] == 0) {
+        folded = true;
+    }
+    document.getElementById("betBar").hidden = true;
+    document.getElementById("bet").hidden = true;
+    chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
+    pot = pot + currentBet;
+    document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
+    document.getElementById("pot").innerHTML = "Pot: " + pot;
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
+    if(cardsDealt == 0) {
+        currentPlayer = 1;
+    }
+    if(currentPlayer != tempuser) {
+        ai();
+        return;
+    }
+    if(raised != 1) {
+        call();
+    }
+    bet[currentPlayer] = 0;
+    currentBet = 0;
+    generateCards();
 }
 
 function ai() {
