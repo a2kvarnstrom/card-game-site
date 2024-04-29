@@ -651,9 +651,6 @@ function check() {
 }
 
 function raise() {
-    else {
-        currentPlayer = 1;
-    }
     if(folded == true) {
         return;
     }
@@ -669,6 +666,8 @@ function raise() {
     }
     if(currentPlayer != playerCount) {
         currentPlayer++;
+    } else {
+        currentPlayer = 1;
     }
     // shows the "progress" bar with the bet
     // 
