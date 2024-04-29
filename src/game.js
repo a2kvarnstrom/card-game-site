@@ -699,27 +699,27 @@ function choosebet(e) {
     // i is width scaled to 1 (so you can multiply with it)
     let i = width / 100;
     // converts click position to bet
-    bet = chips[1] * i;
+    bet = chips[currentPlayer] * i;
     bet = Math.ceil(bet);
     // checks if bet is lower than minimum
-    let j = bet / chips[1];
+    let j = bet / chips[currentPlayer];
     // makes one width per bet (you could have less than max width but max bet)
     width = j * 100;
-    if(bet >= chips[1]) {
-        bet = chips[1];
+    if(bet >= chips[currentPlayer]) {
+        bet = chips[currentPlayer];
     }
     if(bet <= minBet) {
-        let j = minBet / chips[1];
+        let j = minBet / chips[currentPlayer];
         bet = minBet;
         width = j * 100;
     }
-    if(minBet >> chips[1]) {
-        bet = chips[1];
+    if(minBet >> chips[currentPlayer]) {
+        bet = chips[currentPlayer];
         width = 50;
     }
     document.getElementById("bet").innerHTML = "bet: " + bet;
     document.getElementById("bar").style.width = width + "%";
-    if(bet == chips[1]) {
+    if(bet == chips[currentPlayer]) {
         document.getElementById("bet").innerHTML = "bet: ALL IN";
     }
 }
