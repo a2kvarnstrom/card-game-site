@@ -29,7 +29,7 @@ let myGameArea = {
 }
 
 let isChoosing;
-let raised;
+let raised = 1;
 let o = 0;
 let state = 0;
 let playerCount = 4;
@@ -396,6 +396,9 @@ async function generateCards() {
         ai();
         return;
     }
+    if(raised != 1) {
+        call();
+    }
     bet[currentPlayer] = 0;
     currentBet = 0;
         // button press
@@ -668,7 +671,7 @@ function check() {
 function raise(amount) {
     console.log(currentPlayer + ": raise");
     if(amount) {
-        raised == true;
+        raised == currentPlayer;
         bet[currentPlayer] = currentBet + amount;
         currentBet = bet[currentPlayer];
         generateCards();
