@@ -651,9 +651,7 @@ function check() {
 }
 
 function raise() {
-    if(currentPlayer != playerCount) {
-        currentPlayer++;
-    } else {
+    else {
         currentPlayer = 1;
     }
     if(folded == true) {
@@ -664,13 +662,16 @@ function raise() {
         generateCards();
         return;
     }
-    // shows the "progress" bar with the bet
-    // 
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet;
         generateCards();
         return;
     }
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    }
+    // shows the "progress" bar with the bet
+    // 
     document.getElementById("betBar").hidden = false;
     document.getElementById("bet").hidden = false;
     let j = minBet / chips;
