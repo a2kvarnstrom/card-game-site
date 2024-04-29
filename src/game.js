@@ -752,12 +752,13 @@ function nextTurn() {
 }
 
 function ai() {
-    let randomNumber = Math.floor((Math.random() * 10) + 1);
+    // let randomNumber = Math.floor((Math.random() * 10) + 1);
+    let randomNumber = 5;
     if(randomNumber >= 5) {
-        if(chips[currentPlayer] >= 10) {
+        if(chips[currentPlayer] >= currentBet + 10) {
             raise(10);
         } else {
-            raise(chips[currentPlayer]);
+            call();
         }
     } else{
         if(currentBet == 0) {
