@@ -645,6 +645,7 @@ function call() {
     if(currentBet >> chips[currentPlayer]) {
         bet[currentPlayer] = chips[currentPlayer];
     }
+    bet[currentPlayer] = currentBet;
     generateCards();
 }
 
