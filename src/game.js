@@ -29,6 +29,7 @@ let myGameArea = {
 }
 
 let isChoosing;
+let raised;
 let o = 0;
 let state = 0;
 let playerCount = 4;
@@ -60,7 +61,12 @@ let chips = {
     3:50,
     4:50
 };
-let bet = 0;
+let bet = {
+    1:0,
+    2:0,
+    3:0,
+    4:0
+};
 let minBet = 2;
 let pot = 0;
 let currentBet = 0;
@@ -374,7 +380,7 @@ async function generateCards() {
     }
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
-    chips[currentPlayer] = chips[currentPlayer] - bet;
+    chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
     pot = pot + currentBet;
     document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
     document.getElementById("pot").innerHTML = "Pot: " + pot;
@@ -390,14 +396,7 @@ async function generateCards() {
         ai();
         return;
     }
-    for(let i = 0; i == playerCount; i++) {
-        console.log("hai");
-        if(chips[tempuser] << chips[i]) {
-            raise(chips[tempuser] - chips[i]);
-            return;
-        }
-    }
-    bet = 0;
+    bet[currentPlayer] = 0;
     currentBet = 0;
         // button press
     if (aCards.length <= doublePCount + 5) {
@@ -585,7 +584,12 @@ function showCards() {
 function endRound() {
     // resets everything
     currentPlayer = 1;
-    bet = 0;
+    bet = {
+        1:0,
+        2:0,
+        3:0,
+        4:0
+    };
     currentBet = 0;
     isChoosing = false;
     document.getElementById("betBar").addEventListener('mousedown', (e) => {
@@ -636,7 +640,7 @@ function call() {
         return;
     }
     if(currentBet >> chips[currentPlayer]) {
-        bet = chips[currentPlayer];
+        bet[currentPlayer] = chips[currentPlayer];
     }
     generateCards();
 }
@@ -656,7 +660,7 @@ function check() {
         return;
     }
     if(currentBet == 0) {
-        bet = 0;
+        bet[currentPlayer] = 0;
         generateCards();
     }
 }
@@ -664,8 +668,9 @@ function check() {
 function raise(amount) {
     console.log(currentPlayer + ": raise");
     if(amount) {
-        bet = currentBet + amount;
-        currentBet = bet;
+        raised == true;
+        bet[currentPlayer] = currentBet + amount;
+        currentBet = bet[currentPlayer];
         generateCards();
         return;
     }
@@ -678,8 +683,8 @@ function raise(amount) {
         return;
     }
     if(document.getElementById("bet").hidden == false) {
-        currentBet = currentBet + bet;
-        bet = currentBet;
+        currentBet = currentBet + bet[currentPlayer];
+        bet[currentPlayer] = currentBet;
         generateCards();
         return;
     }
@@ -688,13 +693,13 @@ function raise(amount) {
     document.getElementById("betBar").hidden = false;
     document.getElementById("bet").hidden = false;
     let j = minBet / chips[currentPlayer];
-    bet = minBet;
+    bet[currentPlayer] = minBet;
     let width = j * 100;
     if(minBet >> chips[currentPlayer]) {
-        bet = chips[currentPlayer];
+        bet[currentPlayer] = chips[currentPlayer];
         width = 100;
     }
-    document.getElementById("bet").innerHTML = "bet: " + bet;
+    document.getElementById("bet").innerHTML = "bet: " + bet[currentPlayer];
     document.getElementById("bar").style.width = width + "%";
 }
 
@@ -713,27 +718,27 @@ function choosebet(e) {
     // i is width scaled to 1 (so you can multiply with it)
     let i = width / 100;
     // converts click position to bet
-    bet = chips[currentPlayer] * i;
-    bet = Math.ceil(bet);
+    bet[currentPlayer] = chips[currentPlayer] * i;
+    bet[currentPlayer] = Math.ceil(bet[currentPlayer]);
     // checks if bet is lower than minimum
-    let j = bet / chips[currentPlayer];
+    let j = bet[currentPlayer] / chips[currentPlayer];
     // makes one width per bet (you could have less than max width but max bet)
     width = j * 100;
-    if(bet >= chips[currentPlayer]) {
-        bet = chips[currentPlayer];
+    if(bet[currentPlayer] >= chips[currentPlayer]) {
+        bet[currentPlayer] = chips[currentPlayer];
     }
-    if(bet <= minBet) {
+    if(bet[currentPlayer] <= minBet) {
         let j = minBet / chips[currentPlayer];
-        bet = minBet;
+        bet[currentPlayer] = minBet;
         width = j * 100;
     }
     if(minBet >> chips[currentPlayer]) {
-        bet = chips[currentPlayer];
+        bet[currentPlayer] = chips[currentPlayer];
         width = 50;
     }
-    document.getElementById("bet").innerHTML = "bet: " + bet;
+    document.getElementById("bet").innerHTML = "bet: " + bet[currentPlayer];
     document.getElementById("bar").style.width = width + "%";
-    if(bet == chips[currentPlayer]) {
+    if(bet[currentPlayer] == chips[currentPlayer]) {
         document.getElementById("bet").innerHTML = "bet: ALL IN";
     }
 }
@@ -744,7 +749,7 @@ function ai() {
         if(chips[currentPlayer] >= 10) {
             raise(10);
         } else {
-            raise(chips);
+            raise(chips[currentPlayer]);
         }
     } else{
         if(currentBet == 0) {
