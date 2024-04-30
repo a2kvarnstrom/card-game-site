@@ -8,7 +8,7 @@
     </head>
     <body onload="startGame()">
         <div class="container">
-            <div class="nav-wrapper">
+            <div class="nav-wrapper" id="nav-wrapper">
                 <div class="left-side">
                     <div class="nav-link-wrapper">
                         <div class="home">
@@ -43,13 +43,13 @@
             </div>
             <div class="buttons">
                 <button id="ShowCards" type="button" onclick="showCards()">Show Cards</button>
-                <div class="plusminusplayers">
-                </div>
-                <div class="play">
-                    <button class="button call" id="call" type="button" onclick="call()">CALL</button>
-                    <button class="button fold" id="fold" type="button" onclick="fold()">FOLD</button>
-                    <button class="button check" id="check" type="button" onclick="check()">CHECK</button>
-                    <button class="button raise" id="raise" type="button" onclick="raise()">RAISE</button>
+                <div class="play" id="button">
+                    <ol>
+                        <button class="button call" id="call" type="button" onclick="call()">CALL</button>
+                        <button class="button fold" id="fold" type="button" onclick="fold()">FOLD</button>
+                        <button class="button check" id="check" type="button" onclick="check()">CHECK</button>
+                        <button class="button raise" id="raise" type="button" onclick="raise()">RAISE</button>
+                    </ol>
                     <div id="betBar">
                         <div id="bar"></div>
                     </div>

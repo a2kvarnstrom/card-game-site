@@ -18,7 +18,10 @@ let myGameArea = {
         this.canvas.width = document.body.clientWidth * 0.9;
         this.canvas.height = document.body.clientHeight * 0.85;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[0]);
+        //puts the canvas above the buttons
+        const ol = document.getElementsByTagName("OL")[0];
+        ol.insertBefore(this.canvas, ol.children[0]);
+
         this.interval = setInterval(updateGameArea, 20);
         c = this.canvas;
         ctx = c.getContext("2d");
@@ -496,7 +499,7 @@ async function giveCard(player, value, suit) {
     }
     coords.push({"x":cardX,"y":cardY});
     hands[0].movePos(400, 600);
-    await sleep(500);
+    await sleep(510);
     hands[1].movePos(400, 100);
     await sleep(500);
     hands[2].movePos(1100, 100);
