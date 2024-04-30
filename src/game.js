@@ -631,7 +631,7 @@ function call() {
         nextTurn();
         return;
     }
-    bet[currentPlayer] = currentBet;
+    bet[currentPlayer] = currentBet - bet[currentPlayer];
     /*if(currentBet >= chips[1] + 1) {
         bet[1] = chips[1];
         folded = true;
@@ -667,10 +667,11 @@ function raise(amount) {
     if(amount) {
         aiRaised = currentPlayer;
         if(aiRaised == 1) {
-            aiRaised = 2;
+            aiRaised = 0;
         }
-        bet[currentPlayer] = currentBet + amount;
-        currentBet = bet[currentPlayer];
+        bet[currentPlayer] = currentBet - bet[currentPlayer];
+        bet[currentPlayer] += amount;
+        currentBet = bet[currentPlayer]
         console.log(currentPlayer + ": raise -> " + currentBet);
         nextTurn();
         return;
@@ -748,20 +749,6 @@ function nextTurn(num) {
     if(chips[1] == 0) {
         folded = true;
     }
-    document.getElementById("betBar").hidden = true;
-    document.getElementById("bet").hidden = true;
-    chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
-    pot = pot + currentBet;
-    document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
-    document.getElementById("pot").innerHTML = "Pot: " + pot;
-    if(currentPlayer != playerCount) {
-        currentPlayer++;
-    } else {
-        currentPlayer = 1;
-    }
-    if(cardsDealt == 0) {
-        currentPlayer = 1;
-    }
     if(num) {
         pRaised = true;
         bet[currentPlayer] = 0;
@@ -777,6 +764,20 @@ function nextTurn(num) {
         currentPlayer = 1;
         generateCards();
         return;
+    }
+    document.getElementById("betBar").hidden = true;
+    document.getElementById("bet").hidden = true;
+    chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
+    pot = pot + bet[currentPlayer];
+    document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
+    document.getElementById("pot").innerHTML = "Pot: " + pot;
+    if(currentPlayer != playerCount) {
+        currentPlayer++;
+    } else {
+        currentPlayer = 1;
+    }
+    if(cardsDealt == 0) {
+        currentPlayer = 1;
     }
     if(currentPlayer == tempuser) {
         if(aiRaised != 0) {
