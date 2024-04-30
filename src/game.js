@@ -73,7 +73,12 @@ let pot = 0;
 let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
-let folded = false;
+let folded = {
+    1:false,
+    2:false,
+    3:false,
+    4:false
+};
 let currentPlayer = 1;
 let cards = {
     "player1" : [
@@ -408,7 +413,7 @@ async function generateCards() {
         await sleep(2000);
         endRound();
     }
-    if(folded == true) {
+    if(folded[currentPlayer] == true) {
         if(o == 0) {
             nextTurn();
         }
@@ -596,7 +601,7 @@ function endRound() {
     };
     document.getElementById("ShowCards").hidden = true;
     if(chips[currentPlayer] != 0) {
-        folded = false;
+        folded[currentPlayer] = false;
     } else {
         alert("you lose lol");
         location.href = "index.html";
@@ -615,7 +620,8 @@ function endRound() {
 }
 
 function call() {
-    if(folded == true) {
+    if(folded[currentPlayer] == true) {
+        nextTurn();
         return;
     }
     if(currentBet == 0) {
@@ -632,25 +638,27 @@ function call() {
         return;
     }
     bet[currentPlayer] = currentBet - bet[currentPlayer];
-    /*if(currentBet >= chips[1] + 1) {
-        bet[1] = chips[1];
-        folded = true;
-    }*/
+    if(currentBet >= chips[currentPlayer] + 1) {
+        bet[currentPlayer] = chips[currentPlayer];
+        folded[currentPlayer] = true;
+    }
     nextTurn();
 }
 
 function fold() {
-    if(folded == true) {
+    if(folded[currentPlayer] == true) {
+        nextTurn();
         return;
     }
     pRaised = false;
     console.log(currentPlayer + ": fold");
-    folded = true;
+    folded[currentPlayer] = true;
     nextTurn();
 }
 
 function check() {
-    if(folded == true) {
+    if(folded[currentPlayer] == true) {
+        nextTurn();
         return;
     }
     console.log(currentPlayer + ": check");
@@ -661,7 +669,8 @@ function check() {
 }
 
 function raise(amount) {
-    if(folded == true) {
+    if(folded[currentPlayer] == true) {
+        nextTurn();
         return;
     }
     if(amount) {
@@ -678,11 +687,11 @@ function raise(amount) {
     }
     // for player
     pRaised = true;
-    /*if(chips[1] == 0) {
-        folded = true;
+    if(chips[currentPlayer] == 0) {
+        folded[currentPlayer] = true;
         nextTurn();
         return;
-    }*/
+    }
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet[currentPlayer];
         bet[currentPlayer] = currentBet;
@@ -746,8 +755,8 @@ function choosebet(e) {
 }
 
 function nextTurn(num) {
-    if(chips[1] == 0) {
-        folded = true;
+    if(chips[currentPlayer] == 0) {
+        folded[currentPlayer] = true;
     }
     if(num) {
         pRaised = true;
