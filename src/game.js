@@ -629,7 +629,7 @@ function call() {
     bet[currentPlayer] = currentBet;
     if(currentBet >= chips[currentPlayer] + 1) {
         bet[currentPlayer] = chips[currentPlayer];
-        folded = true;
+        // folded = true;
     }
     nextTurn();
 }
@@ -672,11 +672,11 @@ function raise(amount) {
     }
     // for player
     pRaised = true;
-    if(chips[currentPlayer] == 0) {
+    /*if(chips[1] == 0) {
         folded = true;
         nextTurn();
         return;
-    }
+    }*/
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet[currentPlayer];
         bet[currentPlayer] = currentBet;
@@ -740,9 +740,9 @@ function choosebet(e) {
 }
 
 function nextTurn() {
-    if(chips[currentPlayer] == 0) {
+    /*if(chips[currentPlayer] == 0) {
         folded = true;
-    }
+    }*/
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
     chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
@@ -770,15 +770,17 @@ function nextTurn() {
         generateCards();
         return;
     } else {
-        if(aiRaised != currentPlayer || aiRaised == 0) {
-            if(pRaised == false) { 
-                console.log("autocall");
-                call();
-                return;
-            }
+        if(aiRaised != currentPlayer && aiRaised != 0) {
+            call();
+            return;
         }
-        ai();
+        if(aiRaised == currentPlayer) {
+            aiRaised = 0;
+            nextTurn();
+            return;
+        }
     }
+    ai();
 }
 
 function ai() {
