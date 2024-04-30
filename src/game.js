@@ -1,3 +1,6 @@
+let w = window.innerWidth;
+let h = window.innerHeight;
+
 try {
     document.getElementById("betBar").addEventListener("mouseover", () => {
         document.body.style.cursor = "pointer";
@@ -15,8 +18,8 @@ let myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.setAttribute("id", "myCanvas");
-        this.canvas.width = document.body.clientWidth * 0.9;
-        this.canvas.height = document.body.clientHeight * 0.85;
+        this.canvas.width = w * 0.9;
+        this.canvas.height = h * 0.85;
         this.context = this.canvas.getContext("2d");
         //puts the canvas above the buttons
         const ol = document.getElementsByTagName("OL")[0];
@@ -320,8 +323,10 @@ function reDraw() {
 }
 
 function updateGameArea() {
-    myGameArea.canvas.width = document.body.clientWidth * 0.9;
-    myGameArea.canvas.height = document.body.clientHeight * 0.85;
+    w = window.innerWidth;
+    h = window.innerHeight;
+    myGameArea.canvas.width = w * 0.9;
+    myGameArea.canvas.height = h * 0.85;
     reDraw();
     allChangePos();
 }
