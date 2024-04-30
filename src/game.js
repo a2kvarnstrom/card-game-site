@@ -241,16 +241,18 @@ class Card {
     movePos(x, y) {
     	let xDif = x - this.x;
     	let yDif = y - this.y;
+        this.targetX = x;
+        this.targetY = y;
         this.xMovementPerFrame = xDif / 10;
     	this.yMovementPerFrame = yDif / 10;
-    	if (this.x == x && y == this.y) {
-    	    this.xMovementPerFrame = 0;
-    	    this.yMovementPerFrame = 0;
-    	}
     }
     changePos() {
     	this.x += this.xMovementPerFrame;
     	this.y += this.yMovementPerFrame;
+        if (this.x == this.targetX && this.y == this.targetY) {
+    	    this.xMovementPerFrame = 0;
+    	    this.yMovementPerFrame = 0;
+    	}
     }
     setPlayer(player) {
         this.player = player;
@@ -440,7 +442,7 @@ async function generateCards() {
             break;
         }
         let card = pickCard();
-        deal(card);
+        await deal(card);
         j--;
     }
     if(cardsDealt == doublePCount + 5) {
@@ -495,6 +497,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
+    return sleep(550);
 }
 
 function giveCard(player, value, suit) {
@@ -507,7 +510,7 @@ function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    cardX += 100;
+    hands[0].movePos(100, 300);
 }
 
 function showCards() {
@@ -654,8 +657,8 @@ function endRound() {
     cardsDealt = 0;
     ctx.clearRect(0, 0, c.width, c.height);
     hands = [];
-    cardX = 60;
-    cardY = 60;
+    cardX = 750;
+    cardY = 500;
     try {
         winCondition();
     } catch(referenceError) {}
@@ -868,7 +871,7 @@ function nextTurn(num) {
 
 function ai() {
     let randomNumber = Math.floor((Math.random() * 10) + 1);
-    if(randomNumber >= 1) {
+    if(randomNumber >= 5) {
         if(chips[currentPlayer] >= currentBet + 10) {
             raise(10);
         } else {
