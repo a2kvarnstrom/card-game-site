@@ -530,7 +530,7 @@ function showCards() {
                     }
                     break;
                 default:
-                    location.href = "rules.html"
+                    location.href = "rules.html";
             }
             break;
         case 3:
@@ -557,7 +557,7 @@ function showCards() {
                     }
                     break;
                 default:
-                    location.href = "rules.html"
+                    location.href = "rules.html";
             }
             break;
         case 4:
@@ -591,11 +591,11 @@ function showCards() {
                     }
                     break;
                 default:
-                    location.href = "rules.html"
+                    location.href = "rules.html";
             }
             break;
         default:
-            location.href = "rules.html"
+            location.href = "rules.html";
     }
 }
 
