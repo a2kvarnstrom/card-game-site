@@ -16,7 +16,7 @@ let myGameArea = {
     start : function() {
         this.canvas.setAttribute("id", "myCanvas");
         this.canvas.width = document.body.clientWidth * 0.9;
-        this.canvas.height = document.body.clientHeight *0.7;
+        this.canvas.height = document.body.clientHeight * 0.85;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -318,7 +318,7 @@ function reDraw() {
 
 function updateGameArea() {
     myGameArea.canvas.width = document.body.clientWidth * 0.9;
-    myGameArea.canvas.height = document.body.clientHeight * 0.7;
+    myGameArea.canvas.height = document.body.clientHeight * 0.85;
     reDraw();
     allChangePos();
 }
