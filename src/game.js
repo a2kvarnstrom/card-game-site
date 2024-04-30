@@ -29,7 +29,8 @@ let myGameArea = {
 }
 
 let isChoosing;
-let raised = 1;
+let pRaised = true;
+let aiRaised = 0;
 let o = 0;
 let state = 0;
 let playerCount = 4;
@@ -600,6 +601,8 @@ function endRound() {
         alert("you lose lol");
         location.href = "index.html";
     }
+    pRaised = 0;
+    aiRaised = 0;
     pot = 0;
     o = 0;
     j = 0;
@@ -612,31 +615,40 @@ function endRound() {
 }
 
 function call() {
-    console.log(currentPlayer + ": call");
     if(folded == true) {
         return;
     }
-    if(currentBet >> chips[currentPlayer]) {
-        bet[currentPlayer] = chips[currentPlayer];
+    if(currentBet == 0) {
+        check();
+        return;
     }
+    if(currentPlayer == tempuser) {
+        pRaised = false;
+    }
+    console.log(currentPlayer + ": call");
     bet[currentPlayer] = currentBet;
+    if(currentBet >= chips[currentPlayer] + 1) {
+        bet[currentPlayer] = chips[currentPlayer];
+        folded = true;
+    }
     nextTurn();
 }
 
 function fold() {
-    console.log(currentPlayer + ": fold");
     if(folded == true) {
         return;
     }
+    pRaised = false;
+    console.log(currentPlayer + ": fold");
     folded = true;
     nextTurn();
 }
 
 function check() {
-    console.log(currentPlayer + ": check");
     if(folded == true) {
         return;
     }
+    console.log(currentPlayer + ": check");
     if(currentBet == 0) {
         bet[currentPlayer] = 0;
         nextTurn();
@@ -644,17 +656,22 @@ function check() {
 }
 
 function raise(amount) {
-    console.log(currentPlayer + ": raise");
-    if(amount) {
-        raised == currentPlayer;
-        bet[currentPlayer] = currentBet + amount;
-        currentBet = bet[currentPlayer];
-        nextTurn();
-        return;
-    }
     if(folded == true) {
         return;
     }
+    if(amount) {
+        aiRaised = currentPlayer;
+        if(aiRaised == 1) {
+            aiRaised = 2;
+        }
+        bet[currentPlayer] = currentBet + amount;
+        currentBet = bet[currentPlayer];
+        console.log(currentPlayer + ": raise -> " + currentBet);
+        nextTurn();
+        return;
+    }
+    // for player
+    pRaised = true;
     if(chips[currentPlayer] == 0) {
         folded = true;
         nextTurn();
@@ -663,6 +680,7 @@ function raise(amount) {
     if(document.getElementById("bet").hidden == false) {
         currentBet = currentBet + bet[currentPlayer];
         bet[currentPlayer] = currentBet;
+        console.log(currentPlayer + ": raise -> " + currentBet);
         nextTurn();
         return;
     }
@@ -739,22 +757,33 @@ function nextTurn() {
     if(cardsDealt == 0) {
         currentPlayer = 1;
     }
-    if(currentPlayer != tempuser) {
-        ai();
+    if(currentPlayer == tempuser) {
+        if(aiRaised != 0) {
+            call();
+            return;
+        }
+        pRaised = true;
+        bet[currentPlayer] = 0;
+        currentBet = 0;
+        pRaised = false;
+        aiRaised = 0;
+        generateCards();
         return;
+    } else {
+        if(aiRaised != currentPlayer || aiRaised == 0) {
+            if(pRaised == false) { 
+                console.log("autocall");
+                call();
+                return;
+            }
+        }
+        ai();
     }
-    if(raised != 1) {
-        call();
-    }
-    bet[currentPlayer] = 0;
-    currentBet = 0;
-    generateCards();
 }
 
 function ai() {
-    // let randomNumber = Math.floor((Math.random() * 10) + 1);
-    let randomNumber = 5;
-    if(randomNumber >= 5) {
+    let randomNumber = Math.floor((Math.random() * 10) + 1);
+    if(randomNumber >= 1) {
         if(chips[currentPlayer] >= currentBet + 10) {
             raise(10);
         } else {
