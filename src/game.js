@@ -744,7 +744,7 @@ function choosebet(e) {
     }
 }
 
-function nextTurn() {
+function nextTurn(num) {
     if(chips[1] == 0) {
         folded = true;
     }
@@ -762,15 +762,37 @@ function nextTurn() {
     if(cardsDealt == 0) {
         currentPlayer = 1;
     }
-    if(currentPlayer == tempuser) {
-        if(aiRaised != 0) {
-            return;
-        }
+    if(num) {
         pRaised = true;
         bet[currentPlayer] = 0;
         currentBet = 0;
         pRaised = false;
+        bet = {
+            1:0,
+            2:0,
+            3:0,
+            4:0
+        };
         aiRaised = 0;
+        currentPlayer = 1;
+        generateCards();
+        return;
+    }
+    if(currentPlayer == tempuser) {
+        if(aiRaised != 0) {
+            call();
+            return;
+        }
+        bet = {
+            1:0,
+            2:0,
+            3:0,
+            4:0
+        };
+        currentBet = 0;
+        pRaised = false;
+        aiRaised = 0;
+        currentPlayer = 1;
         generateCards();
         return;
     } else {
@@ -780,7 +802,7 @@ function nextTurn() {
         }
         if(aiRaised == currentPlayer) {
             aiRaised = 0;
-            nextTurn();
+            nextTurn(1);
             return;
         }
     }
