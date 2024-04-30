@@ -40,10 +40,6 @@ let aCards;
 let cardsDealt = 0;
 let cardAmount = doublePCount;
 let j = cardAmount;
-let p1username = undefined;
-let p2username = undefined;
-let p3username = undefined;
-let p4username = undefined;
 let tempuser = 1;
 let user = "player1";
 let c;
@@ -510,7 +506,7 @@ function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    hands[0].movePos(100, 300);
+    // hands[0].movePos(100, 300);
 }
 
 function showCards() {
@@ -653,12 +649,12 @@ function endRound() {
     aiRaised = 0;
     pot = 0;
     o = 0;
-    j = 0;
+    j = doublePCount;
     cardsDealt = 0;
     ctx.clearRect(0, 0, c.width, c.height);
     hands = [];
     cardX = 750;
-    cardY = 500;
+    cardY = 600;
     try {
         winCondition();
     } catch(referenceError) {}
