@@ -104,6 +104,8 @@ class Card {
         this.value = value;
         this.x = x;
         this.y = y;
+        this.xMovementPerFrame = 0;
+        this.yMovementPerFrame = 0;
     }
     drawCard(suit, value) {
         // ion fuckin know
@@ -125,7 +127,7 @@ class Card {
             ctx.fill();
             ctx.stroke();
         }
-        function drawSpade(x, y) {
+        function drawSpade() {
             ctx.beginPath();
             ctx.arc(x - 10, y + 10, 10, 0, Math.PI);
             ctx.lineTo(x - 20, y + 10);
@@ -147,7 +149,7 @@ class Card {
             ctx.fill();
             ctx.stroke();
         }
-        function drawClub(x, y) {
+        function drawClub() {
             ctx.beginPath();
             ctx.arc(x-10, y+10, 10, 0, 1.6*Math.PI);
             ctx.fillStyle = "Green";
@@ -168,7 +170,7 @@ class Card {
             ctx.strokeStyle = "Green";
             ctx.stroke();
         }
-        function drawDiamond(x, y) {
+        function drawDiamond() {
             ctx.beginPath();
             ctx.moveTo(x, y-10);
             ctx.quadraticCurveTo(x+4, y+6, x+15, y+10);
@@ -180,7 +182,7 @@ class Card {
             ctx.strokeStyle = "Blue";
             ctx.stroke();
         }
-        function drawFrame(x, y) {
+        function drawFrame() {
             ctx.beginPath();
             ctx.roundRect(x-40, y-43, 80, 100, 5);
             ctx.strokeStyle = "Black";
@@ -188,32 +190,32 @@ class Card {
         }
         switch (suit) {
             case "Hearts":
-                drawHeart(x, y);
+                drawHeart();
                 ctx.font = "28px Arial";
                 ctx.fillStyle = "Tomato";
                 break;
 
             case "Spades":
-                drawSpade(x, y);
+                drawSpade();
                 ctx.font = "28px Arial";
                 ctx.fillStyle = "Black";
                 break;
 
             case "Diamonds": 
-                drawDiamond(x, y);
+                drawDiamond();
                 ctx.font = "28px Arial";
                 ctx.fillStyle = "Blue";
                 break;
 
             case "Clubs": 
-                drawClub(x, y);
+                drawClub();
                 ctx.font = "28px Arial";
                 ctx.fillStyle = "Green";
                 break;
             
             case "FaceDown":
             case "Frame":
-                drawFrame(x, y)
+                drawFrame()
                 return;
         }
         ctx.fillText(value, x - 34, y - 20);
@@ -231,6 +233,24 @@ class Card {
     newPos(x, y) {
     	this.x += x;
     	this.y += y;
+    }
+    setPos(x, y) {
+    	this.x = x;
+    	this.y = y;
+    }
+    movePos(x, y) {
+    	let xDif = x - this.x;
+    	let yDif = y - this.y;
+        this.xMovementPerFrame = xDif / 10;
+    	this.yMovementPerFrame = yDif / 10;
+    	if (this.x == x && y == this.y) {
+    	    this.xMovementPerFrame = 0;
+    	    this.yMovementPerFrame = 0;
+    	}
+    }
+    changePos() {
+    	this.x += this.xMovementPerFrame;
+    	this.y += this.yMovementPerFrame;
     }
     setPlayer(player) {
         this.player = player;
@@ -266,6 +286,21 @@ function startGame() {
     endRound();
 }
 
+function allChangePos() {
+    try {
+        let x;
+        x = 0;
+        while(true) {
+            hands[x].changePos();
+            x++;
+            if(x == cardsDealt) {
+                return;
+            }
+        }
+    }
+    catch(referenceError) {}
+} 
+
 function reDraw() {
     myGameArea.clear();
     try {
@@ -289,6 +324,7 @@ function reDraw() {
 
 function updateGameArea() {
     reDraw();
+    allChangePos();
 }
 
 function increasePlayerCount() {
