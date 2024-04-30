@@ -15,10 +15,10 @@ let myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.setAttribute("id", "myCanvas");
-        this.canvas.width = 1500;
-        this.canvas.height = 720;
+        this.canvas.width = document.body.clientWidth * 0.9;
+        this.canvas.height = document.body.clientHeight *0.7;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[2]);
+        document.body.insertBefore(this.canvas, document.body.childNodes[0].childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
         c = this.canvas;
         ctx = c.getContext("2d");
@@ -321,6 +321,8 @@ function reDraw() {
 }
 
 function updateGameArea() {
+    myGameArea.canvas.width = document.body.clientWidth * 0.9;
+    myGameArea.canvas.height = document.body.clientHeight * 0.7;
     reDraw();
     allChangePos();
 }
@@ -334,7 +336,6 @@ function increasePlayerCount() {
         playerCount++;
     }
     doublePCount = playerCount * 2;
-    document.getElementById("playercount").innerHTML = "Player Count: " + playerCount;
 }
 
 function decreasePlayerCount() {
@@ -350,7 +351,6 @@ function decreasePlayerCount() {
         user = `player${tempuser}`;
     }
     doublePCount = playerCount * 2;
-    document.getElementById("playercount").innerHTML = "Player Count: " + playerCount;
 }
 
 function pickCard() {
@@ -493,10 +493,11 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(550);
+    return sleep(500);
 }
 
-function giveCard(player, value, suit) {
+
+async function giveCard(player, value, suit) {
     cardID.setPlayer(player);
     if(user == player) {
         cardID.draw(suit, value);
@@ -506,7 +507,18 @@ function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    // hands[0].movePos(100, 300);
+    hands[0].movePos(400, 600);
+    await sleep(500);
+    hands[1].movePos(400, 100);
+    await sleep(500);
+    hands[2].movePos(1100, 100);
+    await sleep(500);
+    hands[3].movePos(1100, 600);
+    await sleep(500);
+    hands[4].movePos(485, 600);
+    await sleep(500);
+    hands[5].movePos(485, 100);
+    await sleep(500);
 }
 
 function showCards() {
@@ -821,8 +833,6 @@ function nextTurn(num) {
     document.getElementById("bet").hidden = true;
     chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
     pot = pot + bet[currentPlayer];
-    document.getElementById("chips").innerHTML = "Chips: " + chips[tempuser];
-    document.getElementById("pot").innerHTML = "Pot: " + pot;
     if(currentPlayer != playerCount) {
         currentPlayer++;
     } else {

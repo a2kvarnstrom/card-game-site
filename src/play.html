@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
         <title>Poker - Texas Hold 'Em</title>
+        <script src="game.js"></script>
     </head>
     <body onload="startGame()">
         <div class="container">
@@ -46,9 +47,6 @@
                 <div class="plusminusplayers">
                     <button class="minusbutton" type="button" onclick="decreasePlayerCount()">-</button>
                     <button class="plusbutton" type="button" onclick="increasePlayerCount()">+</button>
-                    <p id="playercount">Player Count: 2</p>
-                    <p id="chips">Chips: 50</p>
-                    <p id="pot">Pot: 0</p>
                 </div>
                 <div class="play">
                     <button class="button call" id="call" type="button" onclick="call()">CALL</button>
@@ -60,9 +58,7 @@
                     </div>
                     <p id="bet">bet: 2</p>
                 </div>
-                <button type="button" class="button" onclick="allChangePos()">butt</button>
             </div>
         </div>
     </body>
 </html>
-<script src="game.js"></script>
