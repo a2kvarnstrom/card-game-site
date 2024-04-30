@@ -256,10 +256,6 @@ class Card {
 }
 
 function switchUser() {
-    if (cardsDealt != 0) {
-        location.href = "rules.html";
-        return;
-    }
     tempuser++;
     if(tempuser >= playerCount + 1) {
         tempuser = 1;
@@ -328,10 +324,6 @@ function updateGameArea() {
 }
 
 function increasePlayerCount() {
-    if (cardsDealt != 0) {
-        location.href = "rules.html";
-        return;
-    }
     if (playerCount <= 3) {
         playerCount++;
     }
@@ -339,10 +331,6 @@ function increasePlayerCount() {
 }
 
 function decreasePlayerCount() {
-    if (cardsDealt != 0) {
-        location.href = "rules.html";
-        return;
-    }
     if (playerCount >= 3) {
         playerCount--;
     }
