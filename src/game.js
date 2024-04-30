@@ -625,12 +625,17 @@ function call() {
     if(currentPlayer == tempuser) {
         pRaised = false;
     }
-    console.log(currentPlayer + ": call");
-    bet[currentPlayer] = currentBet;
-    if(currentBet >= chips[currentPlayer] + 1) {
-        bet[currentPlayer] = chips[currentPlayer];
-        // folded = true;
+    console.log(currentPlayer + ": call -> " + currentBet);
+    if(bet[currentPlayer] == currentBet) {
+        bet[currentPlayer] = 0;
+        nextTurn();
+        return;
     }
+    bet[currentPlayer] = currentBet;
+    /*if(currentBet >= chips[1] + 1) {
+        bet[1] = chips[1];
+        folded = true;
+    }*/
     nextTurn();
 }
 
@@ -740,9 +745,9 @@ function choosebet(e) {
 }
 
 function nextTurn() {
-    /*if(chips[currentPlayer] == 0) {
+    if(chips[1] == 0) {
         folded = true;
-    }*/
+    }
     document.getElementById("betBar").hidden = true;
     document.getElementById("bet").hidden = true;
     chips[currentPlayer] = chips[currentPlayer] - bet[currentPlayer];
@@ -759,7 +764,7 @@ function nextTurn() {
     }
     if(currentPlayer == tempuser) {
         if(aiRaised != 0) {
-            call();
+            alert("choose again dumbass they raised to " + currentBet);
             return;
         }
         pRaised = true;
@@ -780,7 +785,9 @@ function nextTurn() {
             return;
         }
     }
-    ai();
+    if(aiRaised == 0) {
+        ai();
+    }
 }
 
 function ai() {
