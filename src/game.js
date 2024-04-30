@@ -19,7 +19,7 @@ let myGameArea = {
     start : function() {
         this.canvas.setAttribute("id", "myCanvas");
         this.canvas.width = w * 0.9;
-        this.canvas.height = h * 0.85;
+        this.canvas.height = h * 0.75;
         this.context = this.canvas.getContext("2d");
         //puts the canvas above the buttons
         const ol = document.getElementsByTagName("OL")[0];
@@ -99,6 +99,8 @@ let cards = {
             
     ]
 };
+let cw;
+let ch;
 
 class Card {
 	constructor(suit, value, x, y) {
@@ -282,7 +284,6 @@ function refillCards() {
 
 function startGame() {
     myGameArea.start();
-    refillCards();
     endRound();
 }
 
@@ -326,7 +327,9 @@ function updateGameArea() {
     w = window.innerWidth;
     h = window.innerHeight;
     myGameArea.canvas.width = w * 0.9;
-    myGameArea.canvas.height = h * 0.85;
+    myGameArea.canvas.height = h * 0.75;
+    cw = myGameArea.canvas.width;
+    ch = myGameArea.canvas.height;
     reDraw();
     allChangePos();
 }
@@ -492,7 +495,6 @@ function deal(card) {
     return sleep(500);
 }
 
-
 async function giveCard(player, value, suit) {
     cardID.setPlayer(player);
     if(user == player) {
@@ -503,8 +505,9 @@ async function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    hands[0].movePos(400, 600);
     await sleep(510);
+    hands[0].movePos(cw * 0.25, ch * 0.9);
+    await sleep(500);
     hands[1].movePos(400, 100);
     await sleep(500);
     hands[2].movePos(1100, 100);
@@ -514,6 +517,10 @@ async function giveCard(player, value, suit) {
     hands[4].movePos(485, 600);
     await sleep(500);
     hands[5].movePos(485, 100);
+    await sleep(500);
+    hands[6].movePos(1015, 100);
+    await sleep(500);
+    hands[7].movePos(1015, 600);
     await sleep(500);
 }
 
@@ -659,7 +666,7 @@ function endRound() {
     o = 0;
     j = doublePCount;
     cardsDealt = 0;
-    ctx.clearRect(0, 0, c.width, c.height);
+    myGameArea.clear();
     hands = [];
     cardX = 750;
     cardY = 600;
@@ -810,6 +817,7 @@ function nextTurn(num) {
         folded[currentPlayer] = true;
     }
     if(num) {
+        console.log(num);
         pRaised = true;
         bet[currentPlayer] = 0;
         currentBet = 0;
