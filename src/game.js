@@ -600,6 +600,10 @@ function endRound() {
         ]
     };
     document.getElementById("ShowCards").hidden = true;
+    try {
+        winCondition();
+    } catch(referenceError) {}
+
     if(chips[currentPlayer] != 0) {
         folded[currentPlayer] = false;
     } else {
@@ -616,6 +620,10 @@ function endRound() {
     hands = [];
     cardX = 60;
     cardY = 60;
+    try {
+        winCondition();
+    } catch(referenceError) {}
+    refillCards();
     nextTurn();
 }
 
@@ -807,6 +815,7 @@ function nextTurn(num) {
         return;
     } else {
         if(aiRaised != currentPlayer && aiRaised != 0) {
+            console.log("autocall")
             call();
             return;
         }
@@ -836,6 +845,22 @@ function ai() {
             call();
         }
     }
+}
+
+function winCondition() {
+    function pair(p) {
+        for(let i = 7; i >= 0; i--) {
+            for(let j = i-1; j >= 0; j--) {
+                if(cards[p][i].value == cards[p][j].value) {
+                    console.log(p + " pair")
+                }
+            }
+        }
+    }
+    pair("player1");
+    pair("player2");
+    pair("player3");
+    pair("player4");
 }
 
 function loginRedirect() {
