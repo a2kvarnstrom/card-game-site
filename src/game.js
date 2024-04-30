@@ -764,7 +764,6 @@ function nextTurn() {
     }
     if(currentPlayer == tempuser) {
         if(aiRaised != 0) {
-            alert("choose again dumbass they raised to " + currentBet);
             return;
         }
         pRaised = true;
