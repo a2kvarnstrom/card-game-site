@@ -108,8 +108,8 @@ class Card {
         this.value = value;
         this.x = x;
         this.y = y;
-        this.xMovementPerFrame = 0;
-        this.yMovementPerFrame = 0;
+        this.speedX = 0;
+        this.speedY = 0;
     }
     drawCard(suit, value) {
         // ion fuckin know
@@ -247,15 +247,15 @@ class Card {
     	let yDif = y - this.y;
         this.targetX = x;
         this.targetY = y;
-        this.xMovementPerFrame = xDif / 10;
-    	this.yMovementPerFrame = yDif / 10;
+        this.speedX = xDif / 10;
+    	this.speedY = yDif / 10;
     }
     changePos() {
-    	this.x += this.xMovementPerFrame;
-    	this.y += this.yMovementPerFrame;
+    	this.x += this.speedX;
+    	this.y += this.speedY;
         if (this.x == this.targetX && this.y == this.targetY) {
-    	    this.xMovementPerFrame = 0;
-    	    this.yMovementPerFrame = 0;
+    	    this.speedX = 0;
+    	    this.speedY = 0;
     	}
     }
     setPlayer(player) {
@@ -328,8 +328,12 @@ function updateGameArea() {
     h = window.innerHeight;
     myGameArea.canvas.width = w * 0.9;
     myGameArea.canvas.height = h * 0.75;
+    //myGameArea.canvas.width = 1500;
+    //myGameArea.canvas.height = 720;
     cw = myGameArea.canvas.width;
     ch = myGameArea.canvas.height;
+    cw = Math.floor(cw);
+    ch = Math.floor(ch);
     reDraw();
     allChangePos();
 }
@@ -492,10 +496,21 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(500);
+    return sleep(350);
 }
 
-async function giveCard(player, value, suit) {
+async function moveCards() {
+    if(playerCount == 4) {
+        await sleep(350);
+        let x = [cw*0.25, cw*0.25, cw*0.75, cw*0.75];
+        let y = [69, ch*0.1, ch*0.1, ch*0.9, ch*0.9];
+        let i = cardsDealt;
+        j = Math.floor(i / 2);
+        hands[i-1].movePos(x[j], y[j]);
+    }
+}
+
+function giveCard(player, value, suit) {
     cardID.setPlayer(player);
     if(user == player) {
         cardID.draw(suit, value);
@@ -505,23 +520,7 @@ async function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    await sleep(510);
-    hands[0].movePos(cw * 0.25, ch * 0.9);
-    await sleep(500);
-    hands[1].movePos(400, 100);
-    await sleep(500);
-    hands[2].movePos(1100, 100);
-    await sleep(500);
-    hands[3].movePos(1100, 600);
-    await sleep(500);
-    hands[4].movePos(485, 600);
-    await sleep(500);
-    hands[5].movePos(485, 100);
-    await sleep(500);
-    hands[6].movePos(1015, 100);
-    await sleep(500);
-    hands[7].movePos(1015, 600);
-    await sleep(500);
+    moveCards();
 }
 
 function showCards() {
