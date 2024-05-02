@@ -441,14 +441,18 @@ async function generateCards() {
             break;
         }
         let card = pickCard();
-        await deal(card);
+        deal(card);
         j--;
     }
     if(cardsDealt == doublePCount + 5) {
         document.getElementById("ShowCards").hidden = false;
         o++;
+        try {
+            winCondition();
+        } catch(referenceError) {}
         await sleep(2000);
         endRound();
+        return;
     }
     if(folded[currentPlayer] == true) {
         if(o == 0) {
@@ -496,7 +500,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 async function moveCards() {
@@ -520,7 +524,9 @@ function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     coords.push({"x":cardX,"y":cardY});
-    moveCards();
+    
+    // BROKEN:
+    // moveCards();
 }
 
 function showCards() {
@@ -613,7 +619,7 @@ function showCards() {
     }
 }
 
-function endRound() {
+async function endRound() {
     // resets everything
     currentPlayer = 1;
     bet = {
@@ -667,11 +673,9 @@ function endRound() {
     cardsDealt = 0;
     myGameArea.clear();
     hands = [];
-    cardX = 750;
-    cardY = 600;
-    try {
-        winCondition();
-    } catch(referenceError) {}
+    await sleep(20);
+    cardX = cw * 0.5;
+    cardY = ch * 0.9;
     refillCards();
     nextTurn();
 }
@@ -812,11 +816,12 @@ function choosebet(e) {
 }
 
 function nextTurn(num) {
-    if(chips[currentPlayer] == 0) {
-        folded[currentPlayer] = true;
+    for(let i = 0; i <= playerCount; i++) {
+        if(chips[i] == 0) {
+            folded[i] = true;
+        }
     }
     if(num) {
-        console.log(num);
         pRaised = true;
         bet[currentPlayer] = 0;
         currentBet = 0;
@@ -897,12 +902,41 @@ function ai() {
 
 function winCondition() {
     function pair(p) {
-        for(let i = 7; i >= 0; i--) {
-            for(let j = i-1; j >= 0; j--) {
-                if(cards[p][i].value == cards[p][j].value) {
-                    console.log(p + " pair")
+        let i = 0;
+        let j = 1;
+        while(true) {
+            while(true) {
+                if(j <= 2) {
+                    if(i <= 2) {
+                        if(cards[p][i].value == cards[p][j].value) {
+                            console.log(p + " pocket pair");
+                        }
+                    } else {
+                        if(cards["table"][i-2].value == cards[p][j].value) {
+                            console.log(p + " pair");
+                        }
+                    }
+                } else {
+                    if(i <= 2) {
+                        if(cards[p][i].value == cards["table"][j-2].value) {
+                            console.log(p + " pair");
+                        }
+                    } else {
+                        if(cards["table"][i-2].value == cards["table"][j-2].value) {
+                            console.log("table pair");
+                        }
+                    }
                 }
+                if(j == 7) {
+                    console.log("jbreak");
+                    break;
+                }
+                j++;
             }
+            if(i == 7) {
+                break;
+            }
+            i++;
         }
     }
     pair("player1");
