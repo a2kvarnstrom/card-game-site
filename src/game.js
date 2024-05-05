@@ -368,7 +368,6 @@ function pickCard() {
     let card = aCards[Math.floor(Math.random() * n) % i];
     let daqard = aCards.indexOf(card);
     aCards.splice(daqard, 1);
-    card = 1;
     let cardID = convertCard(card);
     return cardID
 }
@@ -851,7 +850,6 @@ async function nextTurn(num) {
     if(cardsDealt == 0) {
         currentPlayer = 1;
     }
-    await sleep(150);
     if(currentPlayer == tempuser) {
         if(aiRaised != 0) {
             call();
@@ -922,18 +920,21 @@ async function winCondition() {
             while(true) {
                 if(j == 7) {
                     console.log("jbreak");
-                    return pairval;
+                    break;
                 }
                 if(j <= 2) {
                     if(i <= 2) {
                         if(cards[p][i].value == cards[p][j].value) {
+                            console.log(cards[p][j].value);
                             console.log(p + " pocket pair");
                             pairval = cards[p][i].value;
+                            console.log(pairval);
                         }
                     } else {
                         if(cards["table"][i-2].value == cards[p][j].value) {
                             console.log(p + " pair");
                             pairval = cards[p][i-2].value;
+                            console.log(pairval);
                         }
                     }
                 } else {
@@ -941,21 +942,21 @@ async function winCondition() {
                         if(cards[p][i].value == cards["table"][j-2].value) {
                             console.log(p + " pair");
                             pairval = cards[p][i].value;
+                            console.log(pairval);
                         }
                     } else {
                         if(cards["table"][i-2].value == cards["table"][j-2].value) {
                             console.log("table pair");
                             pairval = cards[p][i-2].value;
+                            console.log(pairval);
                         }
                     }
                 }
                 j++;
-                console.log(i);
-                console.log(j)
             }
             if(i == 7) {
                 console.log("nuh uh")
-                return;
+                return pairval;
             }
             i++;
         }
