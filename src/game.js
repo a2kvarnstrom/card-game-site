@@ -257,6 +257,10 @@ class Card {
     	    this.speedX = 0;
     	    this.speedY = 0;
     	}
+        let x = this.x / cw;
+        let y = this.x / ch;
+        this.targetX = this.x * x;
+        this.targetY = this.y * y;
     }
     setPlayer(player) {
         this.player = player;
@@ -822,7 +826,6 @@ function nextTurn(num) {
         }
     }
     if(num) {
-        pRaised = true;
         bet[currentPlayer] = 0;
         currentBet = 0;
         pRaised = false;
