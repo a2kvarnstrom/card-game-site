@@ -914,42 +914,48 @@ function ai() {
 async function winCondition() {
     console.log(cards);
     async function pair(p) {
+        let pairval;
         let i = 0;
         let j = 1;
-        while(true == true) {
-            while(true == true) {
+        while(true) {
+            j = i + 1;
+            while(true) {
+                if(j == 7) {
+                    console.log("jbreak");
+                    return pairval;
+                }
                 if(j <= 2) {
                     if(i <= 2) {
                         if(cards[p][i].value == cards[p][j].value) {
                             console.log(p + " pocket pair");
+                            pairval = cards[p][i].value;
                         }
                     } else {
                         if(cards["table"][i-2].value == cards[p][j].value) {
                             console.log(p + " pair");
+                            pairval = cards[p][i-2].value;
                         }
                     }
                 } else {
                     if(i <= 2) {
                         if(cards[p][i].value == cards["table"][j-2].value) {
                             console.log(p + " pair");
+                            pairval = cards[p][i].value;
                         }
                     } else {
                         if(cards["table"][i-2].value == cards["table"][j-2].value) {
                             console.log("table pair");
+                            pairval = cards[p][i-2].value;
                         }
                     }
                 }
-                console.log(i);
-                if(j == 7) {
-                    console.log("jbreak");
-                    return cards[p][j].value;
-                }
                 j++;
+                console.log(i);
                 console.log(j)
-                await sleep(50)
             }
             if(i == 7) {
-                return cards[p][i].value;
+                console.log("nuh uh")
+                return;
             }
             i++;
         }
