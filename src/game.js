@@ -1006,32 +1006,36 @@ async function winCondition() {
                         }
                     }
                     j++;
-                    switch(pairval) {
-                        case 'A':
-                            pairval = 14;
-                            break;
-                        case 'K':
-                            pairval = 13;
-                            break;
-                        case 'Q':
-                            pairval = 12;
-                            break;
-                        case 'J':
-                            pairval = 11;
-                            break;
-                    }
                 }
                 if(i == 6) {
                     break;
                 }
                 i++;
             }
-            console.log(q);
             if(q == 4) {
-                return pairs;
+                break;
+            }
+            console.log(pairs);
+            for(let i = 0; i <= pairs.length - 1; i++) {
+                console.log(i);
+                switch(pairs[i][1]) {
+                    case 'A':
+                        pairs[i][1] = 14;
+                        break;
+                    case 'K':
+                        pairs[i][1] = 13;
+                        break;
+                    case 'Q':
+                        pairs[i][1] = 12;
+                        break;
+                    case 'J':
+                        pairs[i][1] = 11;
+                        break;
+                }
             }
             q++;
         }
+        return pairs;
     }
     function twoPairs() {
 
@@ -1058,7 +1062,7 @@ async function winCondition() {
 
     }
     high();
-    console.log(pair());
+    pair();
     twoPairs();
     toak();
     straight();
