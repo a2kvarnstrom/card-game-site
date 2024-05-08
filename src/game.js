@@ -241,13 +241,12 @@ class Card {
     setTarget(x, y) {
         this.targetX = cw * x;
         this.targetY = ch * y;
-    }
-    changePos() {
         let xDif = this.targetX - this.x;
         let yDif = this.targetY - this.y;
         this.speedX = xDif / 10;
         this.speedY = yDif / 10;
-
+    }
+    changePos() {
     	this.x += this.speedX;
     	this.y += this.speedY;
         let x = this.x * cw;
@@ -256,7 +255,7 @@ class Card {
         this.y = y / ch;
         //this.targetX = cw * this.targetX;
         //this.targetY = ch * this.targetY;
-        if (this.x == this.targetX && this.y == this.targetY) {
+        if (this.x <= this.targetX + 0.01 && this.x >= this.targetX - 0.01 && this.y <= this.targetY + 0.01 && this.y >= this.targetY - 0.01) {
     	    this.speedX = 0;
     	    this.speedY = 0;
     	}
@@ -519,23 +518,7 @@ async function giveCard(player, value, suit) {
         cardID.drawFaceDown();
     }
     
-    // BROKEN:
     moveCards();
-    /*hands[0].setTarget(0.25, 0.9);
-    await sleep(350);
-    hands[1].setTarget(0.25, 0.1);
-    await sleep(350);
-    hands[2].setTarget(0.75, 0.1);
-    await sleep(350);
-    hands[3].setTarget(0.75, 0.9);
-    await sleep(350);
-    hands[4].setTarget(0.2, 0.9);
-    await sleep(350);
-    hands[5].setTarget(0.2, 0.1);
-    await sleep(350)
-    hands[6].setTarget(0.8, 0.1);
-    await sleep(350);
-    hands[7].setTarget(0.8, 0.9);*/
 }
 
 function showCards() {
