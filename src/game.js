@@ -962,8 +962,6 @@ async function winCondition() {
                     if(j <= 1) {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairval = cards[p][i].value;
-                            console.log(i);
-                            console.log(j);
                             console.log(p + " pocket pair in " + pairval);
                             pairs.push([p, pairval]);
                         }
@@ -971,17 +969,12 @@ async function winCondition() {
                         if(i <= 1) {
                             if(cards[p][i].value == cards["table"][j-2].value) {
                                 pairval = cards["table"][j-2].value;
-                                console.log("tablej");
-                                console.log(cards[p][i]);
-                                console.log(cards["table"][j-2]);
                                 console.log(p + " pair in " + pairval);
                                 pairs.push([p, pairval]);
                             }
                         } else {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
                                 pairval = cards["table"][i-2].value;
-                                console.log(i-2);
-                                console.log(j-2);
                                 console.log("table pair in " + pairval);
                                 pairs.push(["table", pairval]);
                             }
