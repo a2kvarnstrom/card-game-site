@@ -942,25 +942,29 @@ async function winCondition() {
                     highest = pCards[i];
                 }
             }
-            highests.push([p, highest]);
+            highests.push(highest);
             if(q == 4) {
                 break;
             }
             q++;
         }
+        console.log(" ");
         console.log(highests);
         return highests;
     }
     function pair() {
         let q = 1; 
         let pairs = [];
+        let pairAmounts = [];
         while(true) {
             let p = `player${q}`;
             let pairval;
+            let pairAmount = 0;
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
                     if(j <= 1) {
                         if(cards[p][i].value == cards[p][j].value) {
+                            pairAmount++;
                             pairval = cards[p][i].value;
                             console.log(p + " pocket pair in " + pairval);
                             pairs.push([p, pairval]);
@@ -968,12 +972,14 @@ async function winCondition() {
                     } else {
                         if(i <= 1) {
                             if(cards[p][i].value == cards["table"][j-2].value) {
+                                pairAmount++;
                                 pairval = cards["table"][j-2].value;
                                 console.log(p + " pair in " + pairval);
                                 pairs.push([p, pairval]);
                             }
                         } else {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
+                                pairAmount++;
                                 pairval = cards["table"][i-2].value;
                                 console.log("table pair in " + pairval);
                                 pairs.push(["table", pairval]);
@@ -998,16 +1004,15 @@ async function winCondition() {
                         break;
                 }
             }
+            pairAmounts.push(pairAmount);
             if(q == 4) {
                 break;
             }
             q++;
         }
-        console.log(pairs);
-        return pairs;
-    }
-    function twoPairs() {
-
+        let returnn = [pairs, pairAmounts];
+        console.log(returnn);
+        return returnn;
     }
     function toak() {
 
@@ -1030,16 +1035,15 @@ async function winCondition() {
     function royal() {
 
     }
-    high();
-    pair();
-    twoPairs();
-    toak();
-    straight();
-    flush();
-    fhouse();
-    sflush();
-    quads();
-    royal();
+    let h = high();
+    let p = pair();
+    let t = toak();
+    let s = straight();
+    let f = flush();
+    let fh = fhouse();
+    let sf = sflush();
+    let q = quads();
+    let rf = royal();
     console.log(" ");
     console.log(" ");
     return sleep(100);
