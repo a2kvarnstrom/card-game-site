@@ -291,12 +291,10 @@ function startGame() {
 
 function allChangePos() {
     try {
-        for(let x = 0; x <= cardsDealt; x++) {
+        for(let x = 0; x != cardsDealt; x++) {
+            console.log(x);
             hands[x].changePos();
             x++;
-            if(x == cardsDealt) {
-                return;
-            }
         }
     }
     catch(referenceError) {}
@@ -305,17 +303,17 @@ function allChangePos() {
 function reDraw() {
     myGameArea.clear();
     try {
-        let x = 0;
+        let u = 0;
         while(true) {
-            if(user == hands[x].player) {
-                hands[x].draw(hands[x].suit, hands[x].value);
-            } else if(hands[x].player == "table") {
-                hands[x].draw(hands[x].suit, hands[x].value);
-            } else if (user != hands[x].player) {
-                hands[x].drawFaceDown();
+            if(user == hands[u].player) {
+                hands[u].draw(hands[u].suit, hands[u].value);
+            } else if(hands[u].player == "table") {
+                hands[u].draw(hands[x].suit, hands[u].value);
+            } else if (user != hands[u].player) {
+                hands[u].drawFaceDown();
             }
-            x++;
-            if(x == cardsDealt) {
+            u++;
+            if(u == cardsDealt) {
                 return;
             }
         }
@@ -409,6 +407,7 @@ function convertCard(card) {
     }
     cardID = new Card(suit, value, cardX, cardY)
     hands.push(cardID);
+    console.log(hands);
     return cardID
 }
 
