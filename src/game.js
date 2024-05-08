@@ -405,7 +405,6 @@ function convertCard(card) {
     }
     cardID = new Card(suit, value, cardX, cardY)
     hands.push(cardID);
-    console.log(hands);
     return cardID
 }
 
