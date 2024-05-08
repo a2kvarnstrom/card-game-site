@@ -292,9 +292,7 @@ function startGame() {
 function allChangePos() {
     try {
         for(let x = 0; x != cardsDealt; x++) {
-            console.log(x);
             hands[x].changePos();
-            x++;
         }
     }
     catch(referenceError) {}
