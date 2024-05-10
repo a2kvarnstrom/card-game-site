@@ -768,12 +768,7 @@ async function nextTurn(num) {
         bet[currentPlayer] = 0;
         currentBet = 0;
         pRaised = false;
-        bet = {
-            1:0,
-            2:0,
-            3:0,
-            4:0
-        };
+        bet = {1:0, 2:0, 3:0, 4:0};
         aiRaised = 0;
         currentPlayer = 1;
         generateCards();
@@ -796,12 +791,7 @@ async function nextTurn(num) {
             call();
             return;
         }
-        bet = {
-            1:0,
-            2:0,
-            3:0,
-            4:0
-        };
+        bet = {1:0, 2:0, 3:0, 4:0};
         currentBet = 0;
         pRaised = false;
         aiRaised = 0;
