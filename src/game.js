@@ -25,6 +25,7 @@ let myGameArea = {
     }
 }
 
+let cardsShown;
 let cardToDeal = 0;
 let isChoosing;
 let pRaised = true;
@@ -47,7 +48,6 @@ let hands = [];
 let cardID;
 let playerToDeal;
 let salt = undefined;
-let d;
 let chips = {1:50, 2:50, 3:50, 4:50};
 let bet = {1:0, 2:0, 3:0, 4:0};
 let minBet = 2;
@@ -78,8 +78,9 @@ class Card {
         this.targetX = this.x;
         this.targetY = this.y;
     }
-    drawCard(suit, value) {
+    drawCard(face) {
         // ion fuckin know
+        let suit = this.suit;
         let x = this.x;
         let y = this.y;
         function drawHeart() {
@@ -158,48 +159,49 @@ class Card {
             ctx.roundRect(x-40, y-43, 80, 100, 5);
             ctx.strokeStyle = "Black";
             ctx.stroke();
+            ctx.fillStyle = "White";
+            ctx.fill();
         }
-        switch (suit) {
-            case "Hearts":
-                drawHeart();
-                ctx.font = "28px Arial";
-                ctx.fillStyle = "Tomato";
-                break;
+        if(face == true) {
+            switch (suit) {
+                case "Hearts":
+                    drawHeart();
+                    ctx.font = "28px Arial";
+                    ctx.fillStyle = "Tomato";
+                    break;
 
-            case "Spades":
-                drawSpade();
-                ctx.font = "28px Arial";
-                ctx.fillStyle = "Black";
-                break;
+                case "Spades":
+                    drawSpade();
+                    ctx.font = "28px Arial";
+                    ctx.fillStyle = "Black";
+                    break;
 
-            case "Diamonds": 
-                drawDiamond();
-                ctx.font = "28px Arial";
-                ctx.fillStyle = "Blue";
-                break;
+                case "Diamonds": 
+                    drawDiamond();
+                    ctx.font = "28px Arial";
+                    ctx.fillStyle = "Blue";
+                    break;
 
-            case "Clubs": 
-                drawClub();
-                ctx.font = "28px Arial";
-                ctx.fillStyle = "Green";
-                break;
-            
-            case "FaceDown":
-            case "Frame":
-                drawFrame()
-                return;
+                case "Clubs": 
+                    drawClub();
+                    ctx.font = "28px Arial";
+                    ctx.fillStyle = "Green";
+                    break;
+            }
+            ctx.fillText(this.value, x - 34, y - 20);
+        } else {
+            drawFrame()
         }
-        ctx.fillText(value, x - 34, y - 20);
     }
     drawFaceDown() {
-        this.drawCard("FaceDown", 69);
+        this.drawCard(false);
     }
-    draw(suit, value) {
-        this.drawCard("Frame", 69);
-        this.drawCard(suit, value);
+    draw() {
+        this.drawCard(false);
+        this.drawCard(true);
     }
-    drawFace(suit, value) {
-        this.drawCard(suit, value);
+    drawFace() {
+        this.drawCard(true);
     }
     setTarget(x, y) {
         this.targetX = cw * x;
@@ -272,12 +274,16 @@ function reDraw() {
     try {
         let u = 0;
         while(true) {
-            if(user == hands[u].player) {
-                hands[u].draw(hands[u].suit, hands[u].value);
-            } else if(hands[u].player == "table") {
-                hands[u].draw(hands[x].suit, hands[u].value);
-            } else if (user != hands[u].player) {
-                hands[u].drawFaceDown();
+            if(cardsShown == false) {
+                if(user == hands[u].player) {
+                    hands[u].draw();
+                } else if(hands[u].player == "table") {
+                    hands[u].draw();
+                } else if (user != hands[u].player) {
+                    hands[u].drawFaceDown();
+                }
+            } else {
+                hands[u].draw();
             }
             u++;
             if(u == cardsDealt) {
@@ -443,19 +449,19 @@ function deal(card) {
     if (cardsDealt <= doublePCount) {
         switch (playerToDeal) {
             case 0:
-                giveCard("player1", card.value, card.suit);
+                giveCard("player1");
                 cards.player1.push(card);
                 break;
             case 1:
-                giveCard("player2", card.value, card.suit);
+                giveCard("player2");
                 cards.player2.push(card);
                 break;
             case 2:
-                giveCard("player3", card.value, card.suit);
+                giveCard("player3");
                 cards.player3.push(card);
                 break;
             case 3:
-                giveCard("player4", card.value, card.suit);
+                giveCard("player4");
                 cards.player4.push(card);
                 break;
         }
@@ -468,7 +474,7 @@ function deal(card) {
 
 function moveCards() {
     if(playerCount == 4) {
-        let x = [0.25, 0.25, 0.75, 0.75, 0.2, 0.2, 0.8, 0.8, 0.4, 0.45, 0.5, 0.55, 0.6];
+        let x = [0.2, 0.2, 0.75, 0.75, 0.25, 0.25, 0.8, 0.8, 0.4, 0.45, 0.5, 0.55, 0.6];
         let y = [0.9, 0.1, 0.1, 0.9, 0.9, 0.1, 0.1, 0.9, 0.5, 0.5, 0.5, 0.5, 0.5];
         let b = cardToDeal;
         hands[b].setTarget(x[b], y[b]);
@@ -476,12 +482,12 @@ function moveCards() {
     }
 }
 
-async function giveCard(player, value, suit) {
+async function giveCard(player) {
     cardID.setPlayer(player);
     if(user == player) {
-        cardID.draw(suit, value);
+        cardID.draw();
     } else if(player == "table") {
-        cardID.draw(suit, value);
+        cardID.draw();
     } else if (user != player) {
         cardID.drawFaceDown();
     }
@@ -491,6 +497,7 @@ async function giveCard(player, value, suit) {
 
 function showCards() {
     let j;
+    cardsShown = true;
     // cancer
     switch(playerCount) {
         case 2:
@@ -499,14 +506,14 @@ function showCards() {
                     j = [1, 3];
                     for(let i = 1; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;  
                 case "player2":
                     j = [0, 2];
                     for(let i = 1; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 default:
@@ -519,21 +526,21 @@ function showCards() {
                     j = [1, 2, 4, 5];
                     for(let i = 3; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 case "player2":
                     j = [0, 2, 3, 5];
                     for(let i = 3; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 case "player3":
                     j = [0, 1, 3, 4];
                     for(let i = 3; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 default:
@@ -546,28 +553,28 @@ function showCards() {
                     j = [1, 2, 3, 5, 6, 7];
                     for(let i = 5; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 case "player2":
                     j = [0, 2, 3, 4, 6, 7];
                     for(let i = 5; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 case "player3":
                     j = [0, 1, 3, 4, 5, 7];
                     for(let i = 5; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 case "player4":
                     j = [0, 1, 2, 4, 5, 6];
                     for(let i = 5; i > -1; i--) {
                         d = hands[j[i]];
-                        cardID.drawFace(d.suit, d.value);
+                        d.drawFace();
                     }
                     break;
                 default:
@@ -581,6 +588,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
+    cardsShown = false;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -902,15 +910,11 @@ async function winCondition() {
             let pairAmount = 0;
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
-                    console.log("hai");
                     if(j <= 1) {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairAmount++;
                             pairval = cards[p][i].value;
                             pairs.push({"player":p, "value":pairval});
-                            if(pairs[pairs.length-1] == pairs[pairs.length-2]) {
-                                console.log(p + " toak");
-                            }
                         }
                     } else {
                         if(i <= 1) {
@@ -918,9 +922,6 @@ async function winCondition() {
                                 pairAmount++;
                                 pairval = cards["table"][j-2].value;
                                 pairs.push({"player":p, "value":pairval});
-                                if(pairs[pairs.length-1] == pairs[pairs.length-2]) {
-                                    console.log(p + " toak");
-                                }
                             }
                         } else {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
@@ -946,6 +947,11 @@ async function winCondition() {
                     case 'J':
                         pairs[i][1] = 11;
                         break;
+                }
+            }
+            for(let i = 1; i <= pairs.length - 1; i++) {
+                if(pairs[i].value == pairs[i-1].value && pairs[i].player != "table") {
+                    console.log(i + " toak");
                 }
             }
             pairAmounts[q-1] = pairAmount;
