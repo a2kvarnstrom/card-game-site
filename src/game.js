@@ -10,7 +10,7 @@ let myGameArea = {
     start : function() {
         this.canvas.setAttribute("id", "myCanvas");
         this.canvas.width = w * 0.9;
-        this.canvas.height = h * 0.75;
+        this.canvas.height = this.canvas.width * 0.42;
         this.context = this.canvas.getContext("2d");
         //puts the canvas above the buttons
         const ol = document.getElementsByTagName("OL")[0];
@@ -214,16 +214,20 @@ class Card {
     changePos() {
     	this.x += this.speedX;
     	this.y += this.speedY;
-        let x = this.x * cw;
-        let y = this.y * ch;
-        this.x = x / cw;
-        this.y = y / ch;
-        //this.targetX = cw * this.targetX;
-        //this.targetY = ch * this.targetY;
         if (this.x <= this.targetX + 0.01 && this.x >= this.targetX - 0.01 && this.y <= this.targetY + 0.01 && this.y >= this.targetY - 0.01) {
     	    this.speedX = 0;
     	    this.speedY = 0;
     	}
+    }
+    scale() {
+        let scaleX = myGameArea.canvas.width / cw;
+        let scaleY = myGameArea.canvas.height / ch;
+        this.x = this.x * scaleX;
+        this.y = this.x * scaleY;
+        this.targetX = this.targetX * scaleX;
+        this.targetY = this.targetY * scaleY;
+        this.speedX = this.speedX * scaleX;
+        this.speedY = this.speedY * scaleY;
     }
     setPlayer(player) {
         this.player = player;
@@ -267,7 +271,16 @@ function allChangePos() {
         }
     }
     catch(referenceError) {}
-} 
+}
+
+/*function allScale() {
+    try {
+        for(let x = 0; x != cardsDealt; x++) {
+            hands[x].scale();
+        }
+    }
+    catch(referenceError) {}
+}*/
 
 function reDraw() {
     myGameArea.clear();
@@ -298,15 +311,14 @@ function updateGameArea() {
     w = window.innerWidth;
     h = window.innerHeight;
     myGameArea.canvas.width = w * 0.9;
-    myGameArea.canvas.height = h * 0.75;
-    //myGameArea.canvas.width = 1500;
-    //myGameArea.canvas.height = 720;
+    myGameArea.canvas.height = myGameArea.canvas.width * 0.42;
+    //allScale();
     cw = myGameArea.canvas.width;
     ch = myGameArea.canvas.height;
     cw = Math.floor(cw);
     ch = Math.floor(ch);
-    reDraw();
     allChangePos();
+    reDraw();
 }
 
 function increasePlayerCount() {
@@ -418,9 +430,9 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        await sleep(1000);
+        // await sleep(1000);
         let winner = winCondition();
-        console.log(winner + " WINS!\nWish to end round?");
+        console.log("Winner: " + winner);
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -469,7 +481,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 function moveCards() {
@@ -726,6 +738,7 @@ function raise(amount) {
 }
 
 function choosebet(e) {
+    // sorry for the comments i didnt understand what i made (while still making it)
     if(!isChoosing) return;
     // sets the bet and how much of the bar it loads
     // 
@@ -766,7 +779,7 @@ function choosebet(e) {
 }
 
 async function nextTurn(num) {
-    console.log("Current Bet: " + currentBet);
+    //console.log("Current Bet: " + currentBet);
     for(let i = 0; i <= playerCount; i++) {
         if(chips[i] == 0) {
             folded[i] = true;
@@ -849,8 +862,7 @@ function ai() {
 }
 
 async function winCondition() {
-    console.log(cards);
-    function high() {
+    function highCardCheck() {
         let q = 1;
         let highests = [];
         while(true) {
@@ -870,7 +882,7 @@ async function winCondition() {
                 i++;
             }
             console.log(pCards);
-            for(let i = 0; i <= pCards.length; i++) {
+            for(let i = 0; i <= pCards.length - 1; i++) {
                 switch(pCards[i]) {
                     case 'A':
                         pCards[i] = 14;
@@ -897,42 +909,61 @@ async function winCondition() {
             }
             q++;
         }
-        console.log(" ");
         return highests;
     }
-    function pair() {
+    function pairCheck() {
+        function uniq(a) {
+            const unique = new Map(
+                a.map(c => [c.id, c])
+            );
+            const returna = [...unique.values()];
+            return returna;
+        }
+        let push;
         let q = 1; 
+        let toak = [];
         let pairs = [];
+        let twoPairs = [];
         let pairAmounts = [0, 0, 0, 0];
         while(true) {
             let p = `player${q}`;
             let pairval;
+            let pairvals = [];
             let pairAmount = 0;
+            let tempPairs = []
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
                     if(j <= 1) {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairAmount++;
                             pairval = cards[p][i].value;
-                            pairs.push({"player":p, "value":pairval});
+                            push = {"player":p, "value":pairval};
+                            pairs.push(push);
+                            pairvals.push(pairval);
                         }
                     } else {
                         if(i <= 1) {
                             if(cards[p][i].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][j-2].value;
-                                pairs.push({"player":p, "value":pairval});
+                                push = {"player":p, "value":pairval};
+                                pairs.push(push);
+                                pairvals.push(pairval);
                             }
                         } else {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][i-2].value;
-                                pairs.push({"player":"table", "value":pairval});
+                                push = {"player":p, "value":pairval};
+                                pairs.push(push);
+                                pairvals.push(pairval);
                             }
                         }
                     }
                 }
             }
+            console.log(pairs);
+            console.log(uniq(pairs));
             for(let i = 0; i <= pairs.length - 1; i++) {
                 switch(pairs[i][1]) {
                     case 'A':
@@ -949,10 +980,54 @@ async function winCondition() {
                         break;
                 }
             }
-            for(let i = 1; i <= pairs.length - 1; i++) {
-                if(pairs[i].value == pairs[i-1].value && pairs[i].player != "table") {
-                    console.log(i + " toak");
+            for(let i = 0; i <= pairvals.length - 1; i++) {
+                switch(pairvals[i]) {
+                    case 'A':
+                        pairvals[i] = 14;
+                        break;
+                    case 'K':
+                        pairvals[i] = 13;
+                        break;
+                    case 'Q':
+                        pairvals[i] = 12;
+                        break;
+                    case 'J':
+                        pairvals[i] = 11;
+                        break;
                 }
+            }
+            for(let i = 1; i < pairs.length; i++) {
+                if(pairs[i] == pairs[i-1]) {
+                    console.log(p + " toak");
+                    if(pairs[i] != toak.slice(-1)) {
+                        toak.push({"player":p, "value":pairs[i]});
+                    }
+                }
+            }
+            if(pairAmount == 2) {
+                twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
+            } else if(pairAmount >= 3) {
+                console.log(p + " three pairs lol");
+                console.log(pairvals);
+                for(let i = 1; i < pairvals.length; i++) {
+                    if(pairvals[i] != pairvals[i-1]) {
+                        if(pairvals.length >= 2) {
+                            if(pairvals[i] > pairvals[i-1]) {
+                                console.log("fau");
+                                tempPairs.push(pairvals[i]);
+                                pairvals.splice(i, 1);
+                                console.log(pairvals);
+                            } else if(pairvals[i-1] > pairvals[i]) {
+                                console.log("ypsilon");
+                                tempPairs.push(pairvals[i-1]);
+                                pairvals.splice(i-1, 1);
+                                console.log(pairvals);
+                            }
+                        }
+                    }
+                }
+                console.log("temp:")
+                console.log(tempPairs);
             }
             pairAmounts[q-1] = pairAmount;
             if(q == 4) {
@@ -960,36 +1035,26 @@ async function winCondition() {
             }
             q++;
         }
-        let returnn = [pairs, pairAmounts];
+        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak};
         return returnn;
     }
-    function straight() {
+    function straightCheck() {
         return "Unfinished";
     }
-    function flush() {
+    function flushCheck() {
         return "Unfinished";
     }
-    function sflush() {
-        return "Unfinished";
-    }
-    function quads() {
-        return "Unfinished";
-    }
-    let ass = high();
-    let nuts = pair();
-    let car = straight();
-    let toilet = flush();
-    let foak = quads();
-    let jeep = sflush();
-    console.log(ass);
-    console.log(nuts);
-    console.log(car);
-    console.log(toilet);
-    console.log(foak);
-    console.log(jeep);
+    let high = highCardCheck();
+    let pair = pairCheck();
+    let straight = straightCheck();
+    let flush = flushCheck();
     console.log(" ");
+    console.log(high);
+    console.log(pair);
+    console.log(straight);
+    console.log(flush);
     console.log(" ");
-    let winner = undefined;
+    let winner = "ur mom";
     return winner;
 }
 
