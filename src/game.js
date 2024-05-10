@@ -31,7 +31,6 @@ let isChoosing;
 let pRaised = true;
 let aiRaised = 0;
 let o = 0;
-let state = 0;
 let playerCount = 4;
 let doublePCount = playerCount * 2;
 let n = 52 /*+ doublePCount*/;
