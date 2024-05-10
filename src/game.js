@@ -902,15 +902,13 @@ async function winCondition() {
             let pairAmount = 0;
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
+                    console.log("hai");
                     if(j <= 1) {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairAmount++;
                             pairval = cards[p][i].value;
                             pairs.push({"player":p, "value":pairval});
-                            if(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]] == pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]) {
-                                console.log(pairs);
-                                console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]]);
-                                console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]);
+                            if(pairs[pairs.length-1] == pairs[pairs.length-2]) {
                                 console.log(p + " toak");
                             }
                         }
@@ -920,10 +918,7 @@ async function winCondition() {
                                 pairAmount++;
                                 pairval = cards["table"][j-2].value;
                                 pairs.push({"player":p, "value":pairval});
-                                if(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]] == pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]) {
-                                    console.log(pairs);
-                                    console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]]);
-                                    console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]);
+                                if(pairs[pairs.length-1] == pairs[pairs.length-2]) {
                                     console.log(p + " toak");
                                 }
                             }
@@ -962,16 +957,10 @@ async function winCondition() {
         let returnn = [pairs, pairAmounts];
         return returnn;
     }
-    function toak() {
-        return "Unfinished";
-    }
     function straight() {
         return "Unfinished";
     }
     function flush() {
-        return "Unfinished";
-    }
-    function fhouse() {
         return "Unfinished";
     }
     function sflush() {
@@ -982,18 +971,14 @@ async function winCondition() {
     }
     let ass = high();
     let nuts = pair();
-    let trips = toak();
     let car = straight();
-    let racist = flush();
-    let boat = fhouse();
+    let toilet = flush();
     let foak = quads();
     let jeep = sflush();
     console.log(ass);
     console.log(nuts);
-    console.log(trips);
     console.log(car);
-    console.log(racist);
-    console.log(boat);
+    console.log(toilet);
     console.log(foak);
     console.log(jeep);
     console.log(" ");
