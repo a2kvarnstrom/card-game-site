@@ -1,18 +1,6 @@
 let w = window.innerWidth;
 let h = window.innerHeight;
 
-try {
-    document.getElementById("betBar").addEventListener("mouseover", () => {
-        document.body.style.cursor = "pointer";
-    });
-    document.getElementById("betBar").addEventListener("mouseout", () => {
-        document.body.style.cursor = "default";
-    });
-    document.getElementsByClassName("button").addEventListener("click", () => {
-        console.log("button press");
-    });
-} catch(referenceError) {}
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -60,46 +48,21 @@ let cardID;
 let playerToDeal;
 let salt = undefined;
 let d;
-let chips = {
-    1:50,
-    2:50,
-    3:50,
-    4:50
-};
-let bet = {
-    1:0,
-    2:0,
-    3:0,
-    4:0
-};
+let chips = {1:50, 2:50, 3:50, 4:50};
+let bet = {1:0, 2:0, 3:0, 4:0};
 let minBet = 2;
 let pot = 0;
 let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
-let folded = {
-    1:false,
-    2:false,
-    3:false,
-    4:false
-};
+let folded = {1:false, 2:false, 3:false, 4:false};
 let currentPlayer = 1;
 let cards = {
-    "player1" : [
-
-    ],
-    "player2" : [
-
-    ],
-    "player3" : [
-
-    ],
-    "player4" : [
-
-    ],
-    "table" : [
-            
-    ]
+    "player1" : [],
+    "player2" : [],
+    "player3" : [],
+    "player4" : [],
+    "table" : []
 };
 let cw;
 let ch;
@@ -285,6 +248,15 @@ function refillCards() {
 }
 
 function startGame() {
+    document.getElementById("betBar").addEventListener("mouseover", () => {
+        document.body.style.cursor = "pointer";
+    });
+    document.getElementById("betBar").addEventListener("mouseout", () => {
+        document.body.style.cursor = "default";
+    });
+    document.getElementsByClassName("button").addEventListener("click", () => {
+        console.log("button press");
+    });
     myGameArea.start();
     endRound();
 }
@@ -442,7 +414,10 @@ async function generateCards() {
     if(cardsDealt == doublePCount + 5) {
         document.getElementById("ShowCards").hidden = false;
         o++;
-        endRound();
+        console.log("what the fuck is happening")
+        await sleep(1000);
+        let winner = winCondition();
+        console.log(winner + " WINS!\nWish to end round?");
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -608,20 +583,9 @@ function showCards() {
 }
 
 async function endRound() {
-    if(cardsDealt != 0) {
-        console.log("what the fuck is happening")
-        await sleep(1000);
-        winCondition();
-        await sleep(1000);
-    }
     // resets everything
     currentPlayer = 1;
-    bet = {
-        1:0,
-        2:0,
-        3:0,
-        4:0
-    };
+    bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
     currentBet = 0;
     isChoosing = false;
@@ -633,21 +597,11 @@ async function endRound() {
     document.getElementById("betBar").addEventListener('mousemove', choosebet);
     document.body.addEventListener('mouseup', () => isChoosing = false);
     cards = {
-        "player1" : [
-    
-        ],
-        "player2" : [
-    
-        ],
-        "player3" : [
-    
-        ],
-        "player4" : [
-    
-        ],
-        "table" : [
-            
-        ]
+        "player1" : [],
+        "player2" : [],
+        "player3" : [],
+        "player4" : [],
+        "table" : []
     };
     document.getElementById("ShowCards").hidden = true;
     if(chips[currentPlayer] != 0) {
@@ -949,13 +903,12 @@ async function winCondition() {
             q++;
         }
         console.log(" ");
-        console.log(highests);
         return highests;
     }
     function pair() {
         let q = 1; 
         let pairs = [];
-        let pairAmounts = [];
+        let pairAmounts = [0, 0, 0, 0];
         while(true) {
             let p = `player${q}`;
             let pairval;
@@ -966,23 +919,32 @@ async function winCondition() {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairAmount++;
                             pairval = cards[p][i].value;
-                            console.log(p + " pocket pair in " + pairval);
-                            pairs.push([p, pairval]);
+                            pairs.push({"player":p, "value":pairval});
+                            if(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]] == pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]) {
+                                console.log(pairs);
+                                console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]]);
+                                console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]);
+                                console.log(p + " toak");
+                            }
                         }
                     } else {
                         if(i <= 1) {
                             if(cards[p][i].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][j-2].value;
-                                console.log(p + " pair in " + pairval);
-                                pairs.push([p, pairval]);
+                                pairs.push({"player":p, "value":pairval});
+                                if(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]] == pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]) {
+                                    console.log(pairs);
+                                    console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]]);
+                                    console.log(pairs[pairAmounts[0]+pairAmount[1]+pairAmount[2]+pairAmount[3]-1]);
+                                    console.log(p + " toak");
+                                }
                             }
                         } else {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][i-2].value;
-                                console.log("table pair in " + pairval);
-                                pairs.push(["table", pairval]);
+                                pairs.push({"player":"table", "value":pairval});
                             }
                         }
                     }
@@ -1004,49 +966,53 @@ async function winCondition() {
                         break;
                 }
             }
-            pairAmounts.push(pairAmount);
+            pairAmounts[q-1] = pairAmount;
             if(q == 4) {
                 break;
             }
             q++;
         }
         let returnn = [pairs, pairAmounts];
-        console.log(returnn);
         return returnn;
     }
     function toak() {
-
+        return "Unfinished";
     }
     function straight() {
-
+        return "Unfinished";
     }
     function flush() {
-
+        return "Unfinished";
     }
     function fhouse() {
-
+        return "Unfinished";
     }
     function sflush() {
-
+        return "Unfinished";
     }
     function quads() {
-
+        return "Unfinished";
     }
-    function royal() {
-
-    }
-    let h = high();
-    let p = pair();
-    let t = toak();
-    let s = straight();
-    let f = flush();
-    let fh = fhouse();
-    let sf = sflush();
-    let q = quads();
-    let rf = royal();
+    let ass = high();
+    let nuts = pair();
+    let trips = toak();
+    let car = straight();
+    let racist = flush();
+    let boat = fhouse();
+    let foak = quads();
+    let jeep = sflush();
+    console.log(ass);
+    console.log(nuts);
+    console.log(trips);
+    console.log(car);
+    console.log(racist);
+    console.log(boat);
+    console.log(foak);
+    console.log(jeep);
     console.log(" ");
     console.log(" ");
-    return sleep(100);
+    let winner = undefined;
+    return winner;
 }
 
 function loginRedirect() {
