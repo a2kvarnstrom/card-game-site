@@ -254,9 +254,6 @@ function startGame() {
     document.getElementById("betBar").addEventListener("mouseout", () => {
         document.body.style.cursor = "default";
     });
-    document.getElementsByClassName("button").addEventListener("click", () => {
-        console.log("button press");
-    });
     myGameArea.start();
     endRound();
 }
