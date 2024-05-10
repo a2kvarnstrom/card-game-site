@@ -273,14 +273,14 @@ function allChangePos() {
     catch(referenceError) {}
 }
 
-/*function allScale() {
+function allScale() {
     try {
         for(let x = 0; x != cardsDealt; x++) {
             hands[x].scale();
         }
     }
     catch(referenceError) {}
-}*/
+}
 
 function reDraw() {
     myGameArea.clear();
