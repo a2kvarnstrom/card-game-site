@@ -46,7 +46,6 @@ let cardY;
 let hands = [];
 let cardID;
 let playerToDeal;
-let salt = undefined;
 let chips = {1:50, 2:50, 3:50, 4:50};
 let bet = {1:0, 2:0, 3:0, 4:0};
 let minBet = 2;
@@ -480,7 +479,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    //return sleep(350);
+    return sleep(350);
 }
 
 function moveCards() {
@@ -843,7 +842,8 @@ function playerTurn() {
     }
 }
 
-function ai() {
+async function ai() {
+    await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 11) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -860,7 +860,7 @@ function ai() {
     }
 }
 
-async function winCondition() {
+function winCondition() {
     function highCardCheck() {
         let q = 1;
         let highests = [];
@@ -911,13 +911,6 @@ async function winCondition() {
         return highests;
     }
     function pairCheck() {
-        function uniq(a) {
-            const unique = new Map(
-                a.map(c => [c.id, c])
-            );
-            const returna = [...unique.values()];
-            return returna;
-        }
         let push;
         let q = 1; 
         let toak = [];
@@ -961,8 +954,6 @@ async function winCondition() {
                     }
                 }
             }
-            console.log(pairs);
-            console.log(uniq(pairs));
             for(let i = 0; i <= pairs.length - 1; i++) {
                 switch(pairs[i][1]) {
                     case 'A':
@@ -1055,45 +1046,4 @@ async function winCondition() {
     console.log(" ");
     let winner = "ur mom";
     return winner;
-}
-
-function loginRedirect() {
-    location.href = "login.html";
-}
-
-function loginRedirect2() {
-    let loginInfo = { "uname": document.getElementById("uname").value, "pass": document.getElementById("pass").value };
-    login(loginInfo);
-}
-
-function registerRedirect() {
-    cpass = "asdasd";
-    let regInfo = { "uname": document.getElementById("uname").value, "pass": document.getElementById("pass").value };
-    register(regInfo);
-}
-
-function register(info) {
-    location.href = "more.html";
-}
-
-function login(loginfo) {
-    let salt;
-    let sendata = { "type": "salt", "value": loginfo.uname };
-    salt = send(sendata);
-    console.log(salt);
-    sendata = { "type": "login", "value": loginfo };
-    send(sendata);
-}
-
-async function send(data) {
-    a = JSON.stringify(data);
-    let response = await fetch("http://pokertexas.duckdns.org:2299", {
-        credentials: "same-origin",
-        method: "POST",
-        body: a,
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    });
-    console.log(response.text());
 }
