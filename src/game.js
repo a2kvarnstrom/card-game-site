@@ -338,8 +338,8 @@ function decreasePlayerCount() {
 }
 
 function pickCard() {
-    let i = aCards.length;
-    let card = aCards[Math.floor(Math.random() * n) % i];
+    n = aCards.length;
+    let card = aCards[Math.floor(Math.random() * n)];
     let daqard = aCards.indexOf(card);
     aCards.splice(daqard, 1);
     let cardID = convertCard(card);
@@ -479,7 +479,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 function moveCards() {
@@ -843,7 +843,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    await sleep(250);
+    //await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 11) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -911,6 +911,25 @@ function winCondition() {
         return highests;
     }
     function pairCheck() {
+        function pairComp(a, b) {
+            let value;
+            let player;
+            if(a.value === b.value) {
+                value = true;
+            } else {
+                value = false;
+            }
+            if(a.player === b.player) {
+                player = true;
+            } else {
+                player = false;
+            }
+            if(value === true && player === true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         let push;
         let q = 1; 
         let toak = [];
@@ -918,11 +937,12 @@ function winCondition() {
         let twoPairs = [];
         let pairAmounts = [0, 0, 0, 0];
         while(true) {
+            let curToak = undefined;
             let p = `player${q}`;
             let pairval;
             let pairvals = [];
             let pairAmount = 0;
-            let tempPairs = []
+            let tempPairs = [];
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
                     if(j <= 1) {
@@ -987,32 +1007,34 @@ function winCondition() {
                 }
             }
             for(let i = 1; i < pairs.length; i++) {
-                if(pairs[i] == pairs[i-1]) {
+                if(pairComp(pairs[i], pairs[i-1]) == true) {
+                    curToak = pairs[i];
                     console.log(p + " toak");
-                    if(pairs[i] != toak.slice(-1)) {
-                        toak.push({"player":p, "value":pairs[i]});
-                    }
                 }
+            }
+            if(curToak) {
+                console.log(curToak);
+                toak.push({"player":p, "value":curToak.value});
             }
             if(pairAmount == 2) {
                 twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
             } else if(pairAmount >= 3) {
                 console.log(p + " three pairs lol");
                 console.log(pairvals);
-                for(let i = 1; i < pairvals.length; i++) {
-                    if(pairvals[i] != pairvals[i-1]) {
-                        if(pairvals.length >= 2) {
-                            if(pairvals[i] > pairvals[i-1]) {
-                                console.log("fau");
-                                tempPairs.push(pairvals[i]);
-                                pairvals.splice(i, 1);
-                                console.log(pairvals);
-                            } else if(pairvals[i-1] > pairvals[i]) {
-                                console.log("ypsilon");
-                                tempPairs.push(pairvals[i-1]);
-                                pairvals.splice(i-1, 1);
-                                console.log(pairvals);
-                            }
+                for(let i = 0; i != 2; i++) {
+                    if(pairvals[1] != pairvals[0]) {
+                        if(pairvals[0] < pairvals[1]) {
+                            tempPairs.push(pairvals[1]);
+                            pairvals.splice(1, 1);
+                            console.log(tempPairs);
+                        } else if(pairvals[0] > pairvals[1]) {
+                            tempPairs.push(pairvals[0]);
+                            pairvals.splice(0, 1);
+                            console.log(tempPairs);
+                        } else {
+                            tempPairs.push(pairvals[0]);
+                            pairvals.splice(0, 1);
+                            console.log(tempPairs);
                         }
                     }
                 }
