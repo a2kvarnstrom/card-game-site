@@ -25,7 +25,7 @@ let myGameArea = {
     }
 }
 
-let cardsShown;
+let cardsShown = true;
 let cardToDeal = 0;
 let isChoosing;
 let pRaised = true;
@@ -268,7 +268,7 @@ function allChangePos() {
             hands[x].changePos();
         }
     }
-    catch(referenceError) {}
+    catch(ReferenceError) {}
 }
 
 function allScale() {
@@ -277,7 +277,7 @@ function allScale() {
             hands[x].scale();
         }
     }
-    catch(referenceError) {}
+    catch(ReferenceError) {}
 }
 
 function reDraw() {
@@ -302,7 +302,7 @@ function reDraw() {
             }
         }
     }
-    catch(referenceError) {}
+    catch(ReferenceError) {}
 }
 
 function updateGameArea() {
@@ -598,7 +598,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = false;
+    cardsShown = true;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -930,19 +930,36 @@ function winCondition() {
                 return false;
             }
         }
+        function compPush(arr, arr2, x, y) {
+            if(arr2[x] != arr2[y]) {
+                if(arr2[x] < arr2[y]) {
+                    arr.push(arr2[y]);
+                    arr2.splice(y, 1);
+                } else if(arr2[x] > arr2[y]) {
+                    arr.push(arr2[x]);
+                    arr2.splice(x, 1);
+                } else {
+                    tempPairs.push(arr2[x]);
+                    arr2.splice(x, 1);
+                }
+            }
+        }
         let push;
         let q = 1; 
         let toak = [];
         let pairs = [];
         let twoPairs = [];
         let pairAmounts = [0, 0, 0, 0];
+        let curToak;
+        let a;
         while(true) {
-            let curToak = undefined;
             let p = `player${q}`;
             let pairval;
             let pairvals = [];
             let pairAmount = 0;
             let tempPairs = [];
+            a = true;
+            curToak = undefined;
             for(let i = 0; i <= 5; i++) {
                 for(let j = i + 1; j <= 6; j++) {
                     if(j <= 1) {
@@ -989,57 +1006,54 @@ function winCondition() {
                         pairs[i][1] = 11;
                         break;
                 }
-            }
-            for(let i = 0; i <= pairvals.length - 1; i++) {
-                switch(pairvals[i]) {
-                    case 'A':
-                        pairvals[i] = 14;
-                        break;
-                    case 'K':
-                        pairvals[i] = 13;
-                        break;
-                    case 'Q':
-                        pairvals[i] = 12;
-                        break;
-                    case 'J':
-                        pairvals[i] = 11;
-                        break;
-                }
+                try {
+                    switch(pairvals[i]) {
+                        case 'A':
+                            pairvals[i] = 14;
+                            break;
+                        case 'K':
+                            pairvals[i] = 13;
+                            break;
+                        case 'Q':
+                            pairvals[i] = 12;
+                            break;
+                        case 'J':
+                            pairvals[i] = 11;
+                            break;
+                    }
+                } catch(ReferenceError) {}
             }
             for(let i = 1; i < pairs.length; i++) {
                 if(pairComp(pairs[i], pairs[i-1]) == true) {
                     curToak = pairs[i];
-                    console.log(p + " toak");
-                }
-            }
-            if(curToak) {
-                console.log(curToak);
-                toak.push({"player":p, "value":curToak.value});
-            }
-            if(pairAmount == 2) {
-                twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
-            } else if(pairAmount >= 3) {
-                console.log(p + " three pairs lol");
-                console.log(pairvals);
-                for(let i = 0; i != 2; i++) {
-                    if(pairvals[1] != pairvals[0]) {
-                        if(pairvals[0] < pairvals[1]) {
-                            tempPairs.push(pairvals[1]);
-                            pairvals.splice(1, 1);
-                            console.log(tempPairs);
-                        } else if(pairvals[0] > pairvals[1]) {
-                            tempPairs.push(pairvals[0]);
-                            pairvals.splice(0, 1);
-                            console.log(tempPairs);
-                        } else {
-                            tempPairs.push(pairvals[0]);
-                            pairvals.splice(0, 1);
-                            console.log(tempPairs);
+                    let pushval = {"player":curToak.player, "value":curToak.value};
+                    if(toak.length > 0) {
+                        if(pairComp(pushval, toak[toak.length-1]) == false) {
+                            console.log(p + " toak");
+                            toak.push(pushval);
                         }
+                    } else {
+                        console.log(p + " toak");
+                        toak.push(pushval);
                     }
+                    a = false;
                 }
-                console.log("temp:")
-                console.log(tempPairs);
+            }
+            if(a) {
+                if(pairAmount == 2) {
+                    twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
+                } else if(pairAmount == 3) {
+                    console.log(p + " 3 pairs lol");
+                    console.log(pairvals);
+    
+                    for(let i = 0; i != pairAmount - 1; i++) {
+                        compPush(tempPairs, pairvals, 0, 1);
+                    }
+                    let pushval = {"player":p, "values":tempPairs};
+                    
+                    twoPairs.push(pushval);
+                    console.log(tempPairs);
+                }
             }
             pairAmounts[q-1] = pairAmount;
             if(q == 4) {
