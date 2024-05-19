@@ -428,11 +428,11 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        //await sleep(1000);
+        await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        //await sleep(3000);
-        //endRound();
+        await sleep(1000);
+        endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -481,7 +481,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    //return sleep(350);
+    return sleep(350);
 }
 
 function moveCards() {
@@ -600,7 +600,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = true;
+    cardsShown = false;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -845,7 +845,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    //await sleep(250);
+    await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 11) {
         if(chips[currentPlayer] >= currentBet + 10) {
