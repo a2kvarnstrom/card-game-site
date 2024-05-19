@@ -25,7 +25,7 @@ let myGameArea = {
     }
 }
 
-let cardsShown = true;
+let cardsShown = false;
 let cardToDeal = 0;
 let isChoosing;
 let pRaised = true;
