@@ -34,7 +34,7 @@ let o = 0;
 let playerCount = 4;
 let doublePCount = playerCount * 2;
 let n = 52 /*+ doublePCount*/;
-let aCards;
+let availableCards;
 let cardsDealt = 0;
 let j = doublePCount;
 let tempuser = 1;
@@ -244,11 +244,11 @@ function switchUser() {
 function refillCards() {
     // creates an array of n objects 1-n (n being the amount of cards)
     n = 52 /*+ doublePCount*/;
-    aCards = [n];
+    availableCards = [n];
     for (i = n; i >= 1; i--) {
-        aCards[i] = i;
+        availableCards[i] = i;
     }
-    aCards.shift();
+    availableCards.shift();
 }
 
 function startGame() {
@@ -338,10 +338,10 @@ function decreasePlayerCount() {
 }
 
 function pickCard() {
-    n = aCards.length;
-    let card = aCards[Math.floor(Math.random() * n)];
-    let daqard = aCards.indexOf(card);
-    aCards.splice(daqard, 1);
+    n = availableCards.length;
+    let card = availableCards[Math.floor(Math.random() * n)];
+    let cardIndex = availableCards.indexOf(card);
+    availableCards.splice(cardIndex, 1);
     let cardID = convertCard(card);
     return cardID
 }
@@ -399,7 +399,7 @@ async function generateCards() {
     }
     let o = 0;
         // button press
-    if (aCards.length <= doublePCount + 5) {
+    if (n <= doublePCount + 5) {
         refillCards();
     }
     // sets the amount of cards to deal depending on the turn
@@ -949,6 +949,7 @@ function winCondition() {
         let toak = [];
         let pairs = [];
         let twoPairs = [];
+        let fhouse = [];
         let pairAmounts = [0, 0, 0, 0];
         let curToak;
         let a;
@@ -1039,11 +1040,24 @@ function winCondition() {
                     a = false;
                 }
             }
-            if(a) {
-                if(pairAmount == 2) {
-                    twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
-                } else if(pairAmount == 3) {
-                    console.log(p + " 3 pairs lol");
+            if(pairAmount == 2) {
+                console.log(p + " two pairs");
+                twoPairs.push({"player":p, "values":[pairvals[0], pairvals[1]]});
+            } 
+            if(pairAmount == 3 && a) {
+                console.log(p + " 3 pairs lol");
+                console.log(pairvals);
+
+                for(let i = 0; i != pairAmount - 1; i++) {
+                    compPush(tempPairs, pairvals, 0, 1);
+                }
+                let pushval = {"player":p, "values":tempPairs};
+                
+                twoPairs.push(pushval);
+                console.log(tempPairs);
+            } else if(pairAmount > 3) {
+                if(pairAmount == 4) {
+                    console.log(p + " full house lol");
                     console.log(pairvals);
     
                     for(let i = 0; i != pairAmount - 1; i++) {
@@ -1051,8 +1065,11 @@ function winCondition() {
                     }
                     let pushval = {"player":p, "values":tempPairs};
                     
-                    twoPairs.push(pushval);
+                    fhouse.push(pushval);
                     console.log(tempPairs);
+                } else if(pairAmount == 5) {
+                    console.log(p + " full house + pair lol");
+                    console.log(pairvals);
                 }
             }
             pairAmounts[q-1] = pairAmount;
@@ -1061,7 +1078,7 @@ function winCondition() {
             }
             q++;
         }
-        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak};
+        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full house":fhouse};
         return returnn;
     }
     function straightCheck() {
