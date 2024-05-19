@@ -600,7 +600,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = true;
+    cardsShown = false;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
