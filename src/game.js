@@ -428,11 +428,11 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        await sleep(1000);
+        //await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        await sleep(3000);
-        endRound();
+        //await sleep(3000);
+        //endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -481,7 +481,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 function moveCards() {
@@ -600,7 +600,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = false;
+    cardsShown = true;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -845,7 +845,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    await sleep(250);
+    //await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 11) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -941,10 +941,30 @@ function winCondition() {
                     arr.push(arr2[x]);
                     arr2.splice(x, 1);
                 } else {
-                    tempPairs.push(arr2[x]);
+                    arr.push(arr2[x]);
                     arr2.splice(x, 1);
                 }
             }
+        }
+        function convert(c) {
+            switch(c) {
+                case 'J':
+                    c = 11;
+                    break;
+                case 'Q':
+                    c = 12;
+                    break;
+                case 'K':
+                    c = 13;
+                    break;
+                case 'A':
+                    c = 14;
+                    break;
+                default:
+                    c = c;
+                    break;
+            }
+            return c;
         }
         let push;
         let q = 1; 
@@ -952,10 +972,12 @@ function winCondition() {
         let pairs = [];
         let twoPairs = [];
         let fhouse = [];
+        let foak = [];
         let pairAmounts = [0, 0, 0, 0];
         let curToak;
         let a;
         while(true) {
+            let fPair = undefined;
             let p = `player${q}`;
             let pairval;
             let pairvals = [];
@@ -969,6 +991,7 @@ function winCondition() {
                         if(cards[p][i].value == cards[p][j].value) {
                             pairAmount++;
                             pairval = cards[p][i].value;
+                            pairval = convert(pairval);
                             push = {"player":p, "value":pairval};
                             pairs.push(push);
                             pairvals.push(pairval);
@@ -978,6 +1001,7 @@ function winCondition() {
                             if(cards[p][i].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][j-2].value;
+                                pairval = convert(pairval);
                                 push = {"player":p, "value":pairval};
                                 pairs.push(push);
                                 pairvals.push(pairval);
@@ -986,6 +1010,7 @@ function winCondition() {
                             if(cards["table"][i-2].value == cards["table"][j-2].value) {
                                 pairAmount++;
                                 pairval = cards["table"][i-2].value;
+                                pairval = convert(pairval);
                                 push = {"player":p, "value":pairval};
                                 pairs.push(push);
                                 pairvals.push(pairval);
@@ -994,41 +1019,10 @@ function winCondition() {
                     }
                 }
             }
-            for(let i = 0; i <= pairs.length - 1; i++) {
-                switch(pairs[i][1]) {
-                    case 'A':
-                        pairs[i][1] = 14;
-                        break;
-                    case 'K':
-                        pairs[i][1] = 13;
-                        break;
-                    case 'Q':
-                        pairs[i][1] = 12;
-                        break;
-                    case 'J':
-                        pairs[i][1] = 11;
-                        break;
-                }
-                try {
-                    switch(pairvals[i]) {
-                        case 'A':
-                            pairvals[i] = 14;
-                            break;
-                        case 'K':
-                            pairvals[i] = 13;
-                            break;
-                        case 'Q':
-                            pairvals[i] = 12;
-                            break;
-                        case 'J':
-                            pairvals[i] = 11;
-                            break;
-                    }
-                } catch(ReferenceError) {}
-            }
             for(let i = 1; i < pairs.length; i++) {
                 if(pairComp(pairs[i], pairs[i-1]) == true) {
                     curToak = pairs[i];
+                    curToak.value = convert(curToak.value);
                     let pushval = {"player":curToak.player, "value":curToak.value};
                     if(toak.length > 0) {
                         if(pairComp(pushval, toak[toak.length-1]) == false) {
@@ -1048,7 +1042,6 @@ function winCondition() {
             } 
             if(pairAmount == 3 && a) {
                 console.log(p + " 3 pairs lol");
-                console.log(pairvals);
 
                 for(let i = 0; i != pairAmount - 1; i++) {
                     compPush(tempPairs, pairvals, 0, 1);
@@ -1056,22 +1049,82 @@ function winCondition() {
                 let pushval = {"player":p, "values":tempPairs};
                 
                 twoPairs.push(pushval);
-                console.log(tempPairs);
             } else if(pairAmount > 3) {
                 if(pairAmount == 4) {
-                    console.log(p + " full house lol");
-                    console.log(pairvals);
-    
-                    for(let i = 0; i != pairAmount - 1; i++) {
-                        compPush(tempPairs, pairvals, 0, 1);
+                    console.log(p + " full house");
+
+                    pairvals = [...new Set(pairvals)];
+                    pairvals.sort();
+
+                    if(curToak.value == pairvals[0]) {
+                        fPair = pairvals[1];
+                    } else {
+                        fPair = pairvals[0];
                     }
-                    let pushval = {"player":p, "values":tempPairs};
+                    let pushval = {"player":p, "values":{"toak":curToak.value, "pair":fPair}};
                     
                     fhouse.push(pushval);
-                    console.log(tempPairs);
                 } else if(pairAmount == 5) {
-                    console.log(p + " full house + pair lol");
+                    console.log(p + " full house + pair lmao");
                     console.log(pairvals);
+                    pairvals = [...new Set(pairvals)];
+                    pairvals.sort();
+                    if(curToak.value == pairvals[0]) {
+                        if(pairvals[1] > pairvals[2]) {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[1]}};
+                        } else {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[2]}};
+                        }
+                    } else if(curToak.value == pairvals[1]) {
+                        if(pairvals[0] > pairvals[2]) {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[0]}};
+                        } else {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[2]}};
+                        }
+                    } else {
+                        if(pairvals[0] > pairvals[1]) {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[0]}};
+                        } else {
+                            pushval = {"player":p, "values":{"toak":curToak.value, "pair":pairvals[1]}};
+                        }
+                    }
+                    fhouse.push(pushval);
+                } else if(pairAmount == 6) {
+                    let pushval;
+                    pairvals = [...new Set(pairvals)];
+                    console.log(pairvals);
+                    if(pairvals.length == 1) {
+                        console.log(p + " lucky ass got a four of a kind");
+                        foak.push({"player":p, "value":pairvals[0]});
+                    } else {
+                        console.log(p + " 2 toaks HOW");
+                        if(pairvals[0] > pairvals[1]) {
+                            pushval = {"player":p, "values":{"toak":pairvals[0], "pair":pairvals[1]}};
+                        } else {
+                            pushval = {"player":p, "values":{"toak":pairvals[1], "pair":pairvals[0]}};
+                        }
+                        fhouse.push(pushval);
+                    }
+                } else {
+                    console.log(p + " got a foak + some more HOW");
+                    let pushval;
+                    let counts = {};
+                    pairvals.forEach(function(x) { counts[x] = (counts[x] || 0) + 1; });
+                    let dpairs = [...new Set(pairvals)];
+                    let ccounts = Object.keys(counts);
+                    console.log(pairvals);
+                    for(let i = 0; i < dpairs.length; i++) {
+                        if(counts[ccounts[i]] == "6") {
+                            pushval = ccounts[i];
+                            break;
+                        }
+                        console.log("len " + dpairs.length);
+                        console.log("counts " + counts[ccounts[i]]);
+                    }
+                    console.log(pushval);
+                    pushval = parseInt(pushval);
+                    console.log(pushval);
+                    foak.push({"player":p, "value":pushval});
                 }
             }
             pairAmounts[q-1] = pairAmount;
@@ -1080,24 +1133,96 @@ function winCondition() {
             }
             q++;
         }
-        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full houses":fhouse};
+        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full houses":fhouse, "foak":foak};
         return returnn;
     }
     function straightCheck() {
-        return "Unfinished";
-    }
-    function flushCheck() {
-        return "Unfinished";
+        let suits = [];
+        let straights = [];
+        let flushes = [];
+        let sflushes = [];
+        let q = 1;
+        while(true) {
+            let p = `player${q}`;
+            let d = 0;
+            let s = 0;
+            let h = 0;
+            let c = 0;
+            let straight = [];
+            let flush = [];
+            let sflush = [];
+            let suit = []
+            for(let i = 0; i <= 6; i++) {
+                if(i <= 1) {
+                    suit.push(cards[p][i].suit);
+                    switch(cards[p][i].suit) {
+                        case "Diamonds":
+                            d++;
+                            break;
+                        case "Spades":
+                            s++;
+                            break;
+                        case "Hearts":
+                            h++;
+                            break;
+                        case "Clubs":
+                            c++;
+                            break;
+                    }
+                } else {
+                    suit.push(cards["table"][i-2].suit);
+                    switch(cards["table"][i-2].suit) {
+                        case "Diamonds":
+                            d++;
+                            break;
+                        case "Spades":
+                            s++;
+                            break;
+                        case "Hearts":
+                            h++;
+                            break;
+                        case "Clubs":
+                            c++;
+                            break;
+                    }
+                }
+            }
+            console.log(d);
+            console.log(s);
+            console.log(h);
+            console.log(c);
+            if(d >= 5) {
+                console.log(p + " flush");
+                flushes.push({"player":p, "suit":"Diamonds"});
+            } else if(s >= 5) {
+                console.log(p + " flush");
+                flushes.push({"player":p, "suit":"Spades"});
+            } else if(h >= 5) {
+                console.log(p + " flush");
+                flushes.push({"player":p, "suit":"Hearts"});
+            } else if(c >= 5) {
+                console.log(p + " flush");
+                flushes.push({"player":p, "suit":"Clubs"});
+            }
+            suits.push(suit);
+            if(q == 4) {
+                break;
+            }
+            q++;
+        }
+        console.log(suits[0]);
+        console.log(suits[1]);
+        console.log(suits[2]);
+        console.log(suits[3]);
+        return {"straight":straights, "flush":flushes, "sflush":sflushes};
     }
     let high = highCardCheck();
     let pair = pairCheck();
     let straight = straightCheck();
-    let flush = flushCheck();
     console.log(" ");
     console.log(high);
     console.log(pair);
     console.log(straight);
-    console.log(flush);
     console.log(" ");
     let winner = "ur mom";
     return winner;
