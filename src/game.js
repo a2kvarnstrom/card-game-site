@@ -431,11 +431,11 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        await sleep(1000);
+        //await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        await sleep(1000);
-        endRound();
+        //await sleep(1000);
+        //endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -492,7 +492,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 function moveCards() {
@@ -611,7 +611,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = false;
+    cardsShown = true;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -858,7 +858,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    await sleep(250);
+    //await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 5) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -898,7 +898,7 @@ function winCondition() {
     }
     function highCardCheck() {
         let q = 1;
-        let highests = [];
+        let highests = [0, 0, 0, 0, 0, 0];
         while(true) {
             let highest = 0;
             let pCards = [];
@@ -924,7 +924,7 @@ function winCondition() {
                     highest = pCards[i];
                 }
             }
-            highests.push(highest);
+            highests[q-1] = highest;
             if(q == playerCount) {
                 break;
             }
@@ -1134,7 +1134,7 @@ function winCondition() {
             }
             q++;
         }
-        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full houses":fhouse, "quads":foak};
+        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "fhouse":fhouse, "quads":foak};
         return returnn;
     }
     function straightCheck() {
@@ -1286,14 +1286,83 @@ function winCondition() {
         }
         return {"straight":straights, "flush":flushes, "sflush":sflushes};
     }
+    function highComp(wantHigh, highArr, s) {
+        switch(s) {
+            case "player1":
+                if(wantHigh.value > highArr.player1) {
+                    highArr.player1 = wantHigh.value
+                }
+                break;
+            case "player2":
+                if(wantHigh.value > highArr.player2) {
+                    highArr.player2 = wantHigh.value
+                }
+                break;
+            case "player3":
+                if(wantHigh.value > highArr.player3) {
+                    highArr.player3 = wantHigh.value
+                }
+                break;
+            case "player4":
+                if(wantHigh.value > highArr.player4) {
+                    highArr.player4 = wantHigh.value
+                }
+                break;
+            case "player5":
+                if(wantHigh.value > highArr.player5) {
+                    highArr.player5 = wantHigh.value
+                }
+                break;
+            case "player6":
+                if(wantHigh.value > highArr.player6) {
+                    highArr.player6 = wantHigh.value
+                }
+                break;
+        }
+        return highArr;
+    }
     let high = highCardCheck();
-    let pair = pairCheck();
-    let straight = straightCheck();
+    let check2 = pairCheck();
+    let check3 = straightCheck();
+    let w = [];
+    let pair = check2.pairs;
+    let twoPair = check2.twoPairs;
+    let toak = check2.toak;
+    let straight = check3.straight;
+    let flush = check3.flush;
+    let fhouse = check2.fhouse;
+    let quads = check2.quads;
+    let sflush = check3.sflush;
+    
+    let hPair = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
+    for(let i = 0; i < pair.length; i++) {
+        hPair = highComp(pair[i], hPair, pair[i].player);
+    }
     console.log(" ");
-    console.log(high);
-    console.log(pair);
-    console.log(straight);
+    console.log(hPair);
     console.log(" ");
-    let winner = "ur mom";
+    console.log("high:", high);
+    console.log("pairs:", pair);
+    console.log("two pairs:", twoPair);
+    console.log("three of a kind:", toak);
+    console.log("straight:", straight);
+    console.log("flush:", flush);
+    console.log("full house:", fhouse);
+    console.log("quads:", quads);
+    console.log("straight flush:", sflush);
+    console.log(" ");
+    let winner = dealChips(w);
+    return winner;
+}
+
+function dealChips(w) {
+    let winner = w;
     return winner;
 }
