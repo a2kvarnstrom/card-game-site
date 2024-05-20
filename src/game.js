@@ -60,6 +60,8 @@ let cards = {
     "player2" : [],
     "player3" : [],
     "player4" : [],
+    "player5" : [],
+    "player6" : [],
     "table" : []
 };
 let cw;
@@ -429,11 +431,11 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        //await sleep(1000);
+        await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        //await sleep(1000);
-        //endRound();
+        await sleep(1000);
+        endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -477,12 +479,20 @@ function deal(card) {
                 giveCard("player4");
                 cards.player4.push(card);
                 break;
+            case 4:
+                giveCard("player5");
+                cards.player4.push(card);
+                break;
+            case 5:
+                giveCard("player6");
+                cards.player4.push(card);
+                break;
         }
     } else {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    //return sleep(350);
+    return sleep(350);
 }
 
 function moveCards() {
@@ -601,7 +611,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = true;
+    cardsShown = false;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -619,6 +629,8 @@ async function endRound() {
         "player2" : [],
         "player3" : [],
         "player4" : [],
+        "player5" : [],
+        "player6" : [],
         "table" : []
     };
     document.getElementById("ShowCards").hidden = true;
@@ -846,9 +858,9 @@ function playerTurn() {
 }
 
 async function ai() {
-    //await sleep(250);
+    await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
-    if(randomNumber >= 11) {
+    if(randomNumber >= 5) {
         if(chips[currentPlayer] >= currentBet + 10) {
             raise(10);
         } else {
@@ -913,7 +925,7 @@ function winCondition() {
                 }
             }
             highests.push(highest);
-            if(q == 4) {
+            if(q == playerCount) {
                 break;
             }
             q++;
@@ -1117,7 +1129,7 @@ function winCondition() {
                 }
             }
             pairAmounts[q-1] = pairAmount;
-            if(q == 4) {
+            if(q == playerCount) {
                 break;
             }
             q++;
@@ -1267,7 +1279,7 @@ function winCondition() {
                 console.log(p + " straight flush");
                 sflushes.push({"player":p, "suit":flushes[flushes.length-1].suit, "cards":straights[straights.length-1].cards, "high":straights[straights.length-1].high});
             }
-            if(q == 4) {
+            if(q == playerCount) {
                 break;
             }
             q++;
