@@ -53,7 +53,7 @@ let pot = 0;
 let currentBet = 0;
 let sBlind = minBet;
 let bBlind = minBet * 2;
-let folded = {1:false, 2:false, 3:false, 4:false};
+let folded = {1:false, 2:false, 3:false, 4:false, 5:false, 6:false};
 let currentPlayer = 1;
 let cards = {
     "player1" : [],
@@ -66,6 +66,7 @@ let cards = {
 };
 let cw;
 let ch;
+let pword;
 
 class Card {
 	constructor(suit, value, x, y) {
@@ -283,6 +284,13 @@ function allScale() {
 }
 
 function reDraw() {
+    function handfoldcomp(a) {
+        a = a.substr(6, 1);
+        if(folded[a] != undefined) {
+            return folded[a];
+        }
+        return false;
+    }
     myGameArea.clear();
     try {
         let u = 0;
@@ -296,7 +304,11 @@ function reDraw() {
                     hands[u].drawFaceDown();
                 }
             } else {
-                hands[u].draw();
+                if(handfoldcomp(hands[u].player) == true && hands[u].player != "player1") {
+                    hands[u].drawFaceDown();
+                } else {
+                    hands[u].draw();
+                }
             }
             u++;
             if(u == cardsDealt) {
@@ -308,6 +320,7 @@ function reDraw() {
 }
 
 function updateGameArea() {
+    document.getElementById("chips").innerHTML = chips[1];
     w = window.innerWidth;
     h = window.innerHeight;
     myGameArea.canvas.width = w * 0.9;
@@ -428,14 +441,14 @@ async function generateCards() {
         j--;
     }
     if(cardsDealt == doublePCount + 5) {
-        document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        //await sleep(1000);
+        await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        //await sleep(1000);
-        //endRound();
+        cardsShown = true;
+        await sleep(1000);
+        endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -492,7 +505,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    //return sleep(350);
+    return sleep(350);
 }
 
 function moveCards() {
@@ -518,102 +531,11 @@ async function giveCard(player) {
     moveCards();
 }
 
-function showCards() {
-    let j;
-    cardsShown = true;
-    // cancer
-    switch(playerCount) {
-        case 2:
-            switch(user) {
-                case "player1":
-                    j = [1, 3];
-                    for(let i = 1; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;  
-                case "player2":
-                    j = [0, 2];
-                    for(let i = 1; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                default:
-                    location.href = "rules.html";
-            }
-            break;
-        case 3:
-            switch(user) {
-                case "player1":
-                    j = [1, 2, 4, 5];
-                    for(let i = 3; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                case "player2":
-                    j = [0, 2, 3, 5];
-                    for(let i = 3; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                case "player3":
-                    j = [0, 1, 3, 4];
-                    for(let i = 3; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                default:
-                    location.href = "rules.html";
-            }
-            break;
-        case 4:
-            switch(user) {
-                case "player1":
-                    j = [1, 2, 3, 5, 6, 7];
-                    for(let i = 5; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                case "player2":
-                    j = [0, 2, 3, 4, 6, 7];
-                    for(let i = 5; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                case "player3":
-                    j = [0, 1, 3, 4, 5, 7];
-                    for(let i = 5; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                case "player4":
-                    j = [0, 1, 2, 4, 5, 6];
-                    for(let i = 5; i > -1; i--) {
-                        d = hands[j[i]];
-                        d.drawFace();
-                    }
-                    break;
-                default:
-                    location.href = "rules.html";
-            }
-            break;
-        default:
-            location.href = "rules.html";
-    }
-}
-
 async function endRound() {
     // resets everything
-    cardsShown = true;
+    cardsShown = false;
     currentPlayer = 1;
-    bet = {1:0, 2:0, 3:0, 4:0};
+    bet = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
     cardToDeal = 0;
     currentBet = 0;
     isChoosing = false;
@@ -633,7 +555,6 @@ async function endRound() {
         "player6" : [],
         "table" : []
     };
-    document.getElementById("ShowCards").hidden = true;
     if(chips[currentPlayer] != 0) {
         folded[currentPlayer] = false;
     } else {
@@ -653,6 +574,10 @@ async function endRound() {
     cardY = ch * 0.9;
     refillCards();
     nextTurn();
+}
+
+function showCards() {
+    cardsShown = true;
 }
 
 function call() {
@@ -676,7 +601,8 @@ function call() {
     bet[currentPlayer] = currentBet - bet[currentPlayer];
     if(currentBet >= chips[currentPlayer] + 1) {
         bet[currentPlayer] = chips[currentPlayer];
-        folded[currentPlayer] = true;
+        fold();
+        return;
     }
     nextTurn();
 }
@@ -724,8 +650,7 @@ function raise(amount) {
     // for player
     pRaised = true;
     if(chips[currentPlayer] == 0) {
-        folded[currentPlayer] = true;
-        nextTurn();
+        fold();
         return;
     }
     if(document.getElementById("bet").hidden == false) {
@@ -802,7 +727,7 @@ async function nextTurn(num) {
         bet[currentPlayer] = 0;
         currentBet = 0;
         pRaised = false;
-        bet = {1:0, 2:0, 3:0, 4:0};
+        bet = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
         aiRaised = 0;
         currentPlayer = 1;
         generateCards();
@@ -825,7 +750,7 @@ async function nextTurn(num) {
             call();
             return;
         }
-        bet = {1:0, 2:0, 3:0, 4:0};
+        bet = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
         currentBet = 0;
         pRaised = false;
         aiRaised = 0;
@@ -858,7 +783,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    //await sleep(250);
+    await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 5) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -1144,8 +1069,8 @@ function winCondition() {
         let sflushes = [];
         let q = 1;
         while(true) {
-            let straight = false;
-            let flush = false;
+            let temp = [];
+            let suiteds = 0;
             let vals = [0, 0];
             let aj = [];
             let ajs = [];
@@ -1162,7 +1087,8 @@ function winCondition() {
             let suit = []
             for(let i = 0; i <= 6; i++) {
                 if(i <= 1) {
-                    tempCards.push(cards[p][i].value);
+                    temp.push([cards[p][i].suit, cards[p][i].value]);
+                    tempCards.push(temp[temp.length-1][1]);
                     tempCards[tempCards.length-1] = convert(tempCards[tempCards.length-1]);
                     if(tempCards[tempCards.length-1] == 14) {
                         tempCards.push(1);
@@ -1195,7 +1121,8 @@ function winCondition() {
                             break;
                     }
                 } else {
-                    tempCards.push(cards["table"][i-2].value);
+                    temp.push([cards["table"][i-2].suit, cards["table"][i-2].value]);
+                    tempCards.push(temp[temp.length-1][1]);
                     tempCards[tempCards.length-1] = convert(tempCards[tempCards.length-1]);
                     if(tempCards[tempCards.length-1] == 14) {
                         tempCards.push(1);
@@ -1232,23 +1159,19 @@ function winCondition() {
             if(d >= 5) {
                 console.log(p + " flush");
                 flushes.push({"player":p, "suit":"Diamonds", "high":dHigh});
-                flush = true;
             } else if(s >= 5) {
                 console.log(p + " flush");
                 flushes.push({"player":p, "suit":"Spades", "high":sHigh});
-                flush = true;
             } else if(h >= 5) {
                 console.log(p + " flush");
                 flushes.push({"player":p, "suit":"Hearts", "high":hHigh});
-                flush = true;
             } else if(c >= 5) {
                 console.log(p + " flush");
                 flushes.push({"player":p, "suit":"Clubs", "high":cHigh});
-                flush = true;
             }
             suits.push(suit);
-            for(let i = 0; i < tempCards.length-1; i++) {
-                for(let j = 1; j < tempCards.length; j++) {
+            for(let i = 0; i < temp.length-1; i++) {
+                for(let j = 1; j < temp.length; j++) {
                     if(tempCards[i] == tempCards[j]-1 || tempCards[i] == tempCards[j]+1) {
                         aj.push(tempCards[i]);
                         aj.push(tempCards[j]);
@@ -1261,7 +1184,7 @@ function winCondition() {
                 if(aj[i] != aj[i+1]-1) {
                     vals.splice(0, 1);
                     vals.push(i+1);
-                    let newVal = aj.slice(vals[0], vals[1])
+                    let newVal = aj.slice(vals[0], vals[1]);
                     ajs.push(newVal);
                 }
             }
@@ -1272,10 +1195,9 @@ function winCondition() {
                         ajs[i].splice(0, ajs[i].length-5);
                     }
                     straights.push({"player":p, "cards":ajs[i], "high":ajs[i][ajs[i].length-1]});
-                    straight = true;
                 }
             }
-            if(straight == true && flush == true) {
+            if(false) {
                 console.log(p + " straight flush");
                 sflushes.push({"player":p, "suit":flushes[flushes.length-1].suit, "cards":straights[straights.length-1].cards, "high":straights[straights.length-1].high});
             }
@@ -1289,33 +1211,33 @@ function winCondition() {
     function highComp(wantHigh, highArr, s) {
         switch(s) {
             case "player1":
-                if(wantHigh.value > highArr.player1) {
-                    highArr.player1 = wantHigh.value
+                if(wantHigh > highArr.player1) {
+                    highArr.player1 = wantHigh;
                 }
                 break;
             case "player2":
-                if(wantHigh.value > highArr.player2) {
-                    highArr.player2 = wantHigh.value
+                if(wantHigh > highArr.player2) {
+                    highArr.player2 = wantHigh;
                 }
                 break;
             case "player3":
-                if(wantHigh.value > highArr.player3) {
-                    highArr.player3 = wantHigh.value
+                if(wantHigh > highArr.player3) {
+                    highArr.player3 = wantHigh;
                 }
                 break;
             case "player4":
-                if(wantHigh.value > highArr.player4) {
-                    highArr.player4 = wantHigh.value
+                if(wantHigh > highArr.player4) {
+                    highArr.player4 = wantHigh;
                 }
                 break;
             case "player5":
-                if(wantHigh.value > highArr.player5) {
-                    highArr.player5 = wantHigh.value
+                if(wantHigh > highArr.player5) {
+                    highArr.player5 = wantHigh;
                 }
                 break;
             case "player6":
-                if(wantHigh.value > highArr.player6) {
-                    highArr.player6 = wantHigh.value
+                if(wantHigh > highArr.player6) {
+                    highArr.player6 = wantHigh;
                 }
                 break;
         }
@@ -1342,11 +1264,96 @@ function winCondition() {
         "player5":0,
         "player6":0
     };
+    let hTwoPair = {
+        "player1":[],
+        "player2":[],
+        "player3":[],
+        "player4":[],
+        "player5":[],
+        "player6":[]
+    };
+    let hToak = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
+    let hStraight = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
+    let hFlush = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
+    let hFhouse = {
+        "player1":{},
+        "player2":{},
+        "player3":{},
+        "player4":{},
+        "player5":{},
+        "player6":{}
+    };
+    let hQuads = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
+    let hSflush = {
+        "player1":0,
+        "player2":0,
+        "player3":0,
+        "player4":0,
+        "player5":0,
+        "player6":0
+    };
     for(let i = 0; i < pair.length; i++) {
-        hPair = highComp(pair[i], hPair, pair[i].player);
+        hPair = highComp(pair[i].value, hPair, pair[i].player);
     }
+    for(let i = 0; i < twoPair.length; i++) {
+        hTwoPair = highComp(twoPair[i].values, hTwoPair, twoPair[i].player);
+    }
+    for(let i = 0; i < toak.length; i++) {
+        hToak = highComp(toak[i].value, hToak, toak[i].player);
+    }
+    for(let i = 0; i < straight.length; i++) {
+        hStraight = highComp(straight[i].high, hStraight, straight[i].player);
+    }
+    for(let i = 0; i < flush.length; i++) {
+        hFlush = highComp(flush[i].high, hFlush, flush[i].player);
+    }
+    for(let i = 0; i < fhouse.length; i++) {
+        hFhouse = highComp(fhouse[i].values, hFhouse, fhouse[i].player);
+    }
+    for(let i = 0; i < quads.length; i++) {
+        hQuads = highComp(quads[i].value, hQuads, quads[i].player);
+    }
+    for(let i = 0; i < sflush.length; i++) {
+        hSflush = highComp(sflush[i].high, hSflush, sflush[i].player);
+    }
+
     console.log(" ");
     console.log(hPair);
+    console.log(hTwoPair);
+    console.log(hToak);
+    console.log(hStraight);
+    console.log(hFlush);
+    console.log(hFhouse);
+    console.log(hQuads);
+    console.log(hSflush);
     console.log(" ");
     console.log("high:", high);
     console.log("pairs:", pair);
