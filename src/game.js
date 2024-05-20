@@ -337,6 +337,7 @@ function decreasePlayerCount() {
     doublePCount = playerCount * 2;
 }
 
+let a = 1;
 function pickCard() {
     n = availableCards.length;
     let card = availableCards[Math.floor(Math.random() * n)];
@@ -428,11 +429,11 @@ async function generateCards() {
         document.getElementById("ShowCards").hidden = false;
         o++;
         console.log("what the fuck is happening")
-        await sleep(1000);
+        //await sleep(1000);
         let winner = winCondition();
         console.log("Winner: " + winner);
-        await sleep(1000);
-        endRound();
+        //await sleep(1000);
+        //endRound();
         return;
     }
     if(folded[currentPlayer] == true) {
@@ -481,7 +482,7 @@ function deal(card) {
         giveCard("table", card.value, card.suit);
         cards.table.push(card);
     }
-    return sleep(350);
+    //return sleep(350);
 }
 
 function moveCards() {
@@ -600,7 +601,7 @@ function showCards() {
 
 async function endRound() {
     // resets everything
-    cardsShown = false;
+    cardsShown = true;
     currentPlayer = 1;
     bet = {1:0, 2:0, 3:0, 4:0};
     cardToDeal = 0;
@@ -845,7 +846,7 @@ function playerTurn() {
 }
 
 async function ai() {
-    await sleep(250);
+    //await sleep(250);
     let randomNumber = Math.floor((Math.random() * 10) + 1);
     if(randomNumber >= 11) {
         if(chips[currentPlayer] >= currentBet + 10) {
@@ -863,6 +864,26 @@ async function ai() {
 }
 
 function winCondition() {
+    function convert(c) {
+        switch(c) {
+            case 'J':
+                c = 11;
+                break;
+            case 'Q':
+                c = 12;
+                break;
+            case 'K':
+                c = 13;
+                break;
+            case 'A':
+                c = 14;
+                break;
+            default:
+                c = c;
+                break;
+        }
+        return c;
+    }
     function highCardCheck() {
         let q = 1;
         let highests = [];
@@ -884,20 +905,7 @@ function winCondition() {
             }
             console.log(pCards);
             for(let i = 0; i <= pCards.length - 1; i++) {
-                switch(pCards[i]) {
-                    case 'A':
-                        pCards[i] = 14;
-                        break;
-                    case 'K':
-                        pCards[i] = 13;
-                        break;
-                    case 'Q':
-                        pCards[i] = 12;
-                        break;
-                    case 'J':
-                        pCards[i] = 11;
-                        break;
-                }
+                pCards[i] = convert(pCards[i]);
             }
             for(let i = 0; i <= pCards.length - 2; i++) {
                 if(pCards[i] >= highest) {
@@ -910,6 +918,7 @@ function winCondition() {
             }
             q++;
         }
+        console.log(" ");
         return highests;
     }
     function pairCheck() {
@@ -945,26 +954,6 @@ function winCondition() {
                     arr2.splice(x, 1);
                 }
             }
-        }
-        function convert(c) {
-            switch(c) {
-                case 'J':
-                    c = 11;
-                    break;
-                case 'Q':
-                    c = 12;
-                    break;
-                case 'K':
-                    c = 13;
-                    break;
-                case 'A':
-                    c = 14;
-                    break;
-                default:
-                    c = c;
-                    break;
-            }
-            return c;
         }
         let push;
         let q = 1; 
@@ -1133,7 +1122,7 @@ function winCondition() {
             }
             q++;
         }
-        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full houses":fhouse, "foak":foak};
+        let returnn = {"pairs":pairs, "pairAmounts":pairAmounts, "twoPairs":twoPairs, "toak":toak, "full houses":fhouse, "quads":foak};
         return returnn;
     }
     function straightCheck() {
@@ -1143,77 +1132,146 @@ function winCondition() {
         let sflushes = [];
         let q = 1;
         while(true) {
+            let straight = false;
+            let flush = false;
+            let vals = [0, 0];
+            let aj = [];
+            let ajs = [];
+            let tempCards = [];
             let p = `player${q}`;
             let d = 0;
             let s = 0;
             let h = 0;
             let c = 0;
-            let straight = [];
-            let flush = [];
-            let sflush = [];
+            let dHigh = 0;
+            let sHigh = 0;
+            let hHigh = 0;
+            let cHigh = 0;
             let suit = []
             for(let i = 0; i <= 6; i++) {
                 if(i <= 1) {
+                    tempCards.push(cards[p][i].value);
+                    tempCards[tempCards.length-1] = convert(tempCards[tempCards.length-1]);
+                    if(tempCards[tempCards.length-1] == 14) {
+                        tempCards.push(1);
+                    }
                     suit.push(cards[p][i].suit);
                     switch(cards[p][i].suit) {
                         case "Diamonds":
+                            if(tempCards[tempCards.length-1] > dHigh) {
+                                dHigh = tempCards[tempCards.length-1];
+                            }
                             d++;
                             break;
                         case "Spades":
+                            if(tempCards[tempCards.length-1] > sHigh) {
+                                sHigh = tempCards[tempCards.length-1];
+                            }
                             s++;
                             break;
                         case "Hearts":
+                            if(tempCards[tempCards.length-1] > hHigh) {
+                                hHigh = tempCards[tempCards.length-1];
+                            }
                             h++;
                             break;
                         case "Clubs":
+                            if(tempCards[tempCards.length-1] > cHigh) {
+                                cHigh = tempCards[tempCards.length-1];
+                            }
                             c++;
                             break;
                     }
                 } else {
+                    tempCards.push(cards["table"][i-2].value);
+                    tempCards[tempCards.length-1] = convert(tempCards[tempCards.length-1]);
+                    if(tempCards[tempCards.length-1] == 14) {
+                        tempCards.push(1);
+                    }
                     suit.push(cards["table"][i-2].suit);
                     switch(cards["table"][i-2].suit) {
                         case "Diamonds":
+                            if(tempCards[tempCards.length-1] > dHigh) {
+                                dHigh = tempCards[tempCards.length-1];
+                            }
                             d++;
                             break;
                         case "Spades":
+                            if(tempCards[tempCards.length-1] > sHigh) {
+                                sHigh = tempCards[tempCards.length-1];
+                            }
                             s++;
                             break;
                         case "Hearts":
+                            if(tempCards[tempCards.length-1] > hHigh) {
+                                hHigh = tempCards[tempCards.length-1];
+                            }
                             h++;
                             break;
                         case "Clubs":
+                            if(tempCards[tempCards.length-1] > cHigh) {
+                                cHigh = tempCards[tempCards.length-1];
+                            }
                             c++;
                             break;
                     }
                 }
             }
-            console.log(d);
-            console.log(s);
-            console.log(h);
-            console.log(c);
             if(d >= 5) {
                 console.log(p + " flush");
-                flushes.push({"player":p, "suit":"Diamonds"});
+                flushes.push({"player":p, "suit":"Diamonds", "high":dHigh});
+                flush = true;
             } else if(s >= 5) {
                 console.log(p + " flush");
-                flushes.push({"player":p, "suit":"Spades"});
+                flushes.push({"player":p, "suit":"Spades", "high":sHigh});
+                flush = true;
             } else if(h >= 5) {
                 console.log(p + " flush");
-                flushes.push({"player":p, "suit":"Hearts"});
+                flushes.push({"player":p, "suit":"Hearts", "high":hHigh});
+                flush = true;
             } else if(c >= 5) {
                 console.log(p + " flush");
-                flushes.push({"player":p, "suit":"Clubs"});
+                flushes.push({"player":p, "suit":"Clubs", "high":cHigh});
+                flush = true;
             }
             suits.push(suit);
+            for(let i = 0; i < tempCards.length-1; i++) {
+                for(let j = 1; j < tempCards.length; j++) {
+                    if(tempCards[i] == tempCards[j]-1 || tempCards[i] == tempCards[j]+1) {
+                        aj.push(tempCards[i]);
+                        aj.push(tempCards[j]);
+                        aj = [...new Set(aj)];
+                        aj.sort((a, b) => a - b);
+                    }
+                }
+            }
+            for(let i = 0; i < aj.length; i++) {
+                if(aj[i] != aj[i+1]-1) {
+                    vals.splice(0, 1);
+                    vals.push(i+1);
+                    let newVal = aj.slice(vals[0], vals[1])
+                    ajs.push(newVal);
+                }
+            }
+            for(let i = 0; i < ajs.length; i++) {
+                if(ajs[i].length >= 5) {
+                    console.log(p + " straight");
+                    if(ajs[i].length > 5) {
+                        ajs[i].splice(0, ajs[i].length-5);
+                    }
+                    straights.push({"player":p, "cards":ajs[i], "high":ajs[i][ajs[i].length-1]});
+                    straight = true;
+                }
+            }
+            if(straight == true && flush == true) {
+                console.log(p + " straight flush");
+                sflushes.push({"player":p, "suit":flushes[flushes.length-1].suit, "cards":straights[straights.length-1].cards, "high":straights[straights.length-1].high});
+            }
             if(q == 4) {
                 break;
             }
             q++;
         }
-        console.log(suits[0]);
-        console.log(suits[1]);
-        console.log(suits[2]);
-        console.log(suits[3]);
         return {"straight":straights, "flush":flushes, "sflush":sflushes};
     }
     let high = highCardCheck();
