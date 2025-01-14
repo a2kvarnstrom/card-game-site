@@ -1,8 +1,18 @@
+/* Variables */
+
+:root {
+    --bg: black;
+}
+
 /* Body Styles */
+
+canvas {
+    background-color: var(--bg);
+}
 
 body {
     font-family: monospace;
-    background-color: black;
+    background-color: var(--bg);
     text-decoration-color: white;
 }
 
@@ -133,14 +143,6 @@ label {
 .minusbutton:hover {
     background-color: white;
     color: #780000;
-}
-
-/* Canvas */
-
-canvas {
-    border: 3px solid #909090;
-    border-radius: 15px;
-    background-color: white;
 }
 
 /* Progress Bar Styles */

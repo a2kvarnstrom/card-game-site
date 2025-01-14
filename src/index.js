@@ -1,3 +1,5 @@
+let server = {"reachable":true};
+
 function loginRedirect() {
     location.href = "login.html";
 }
@@ -21,20 +23,24 @@ function login(loginfo) {
     let salt;
     let sendata = { "type": "salt", "value": loginfo.uname };
     salt = send(sendata);
-    console.log(salt);
-    sendata = { "type": "login", "value": loginfo };
+    sendata = {"type": "login", "value": loginfo };
     send(sendata);
 }
 
 async function send(data) {
     a = JSON.stringify(data);
-    let response = await fetch("http://pokertexas.duckdns.org:2299", {
-        credentials: "same-origin",
-        method: "POST",
-        body: a,
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    });
-    console.log(response.text());
+    if(server.reachable) {
+        try {
+            /*let response = await fetch("http://pokertexas.duckdns.org:2299", {
+                credentials: "same-origin",
+                method: "POST",
+                body: a,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });*/
+            console.log(response.text());
+            server.reachable = false;
+        } catch(a) {console.error("Server Unreachable");}
+    }
 }
